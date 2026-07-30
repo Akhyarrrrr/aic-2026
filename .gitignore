@@ -1,0 +1,30 @@
+# ── WordPress core (abaikan semua di root) ──
+/*
+!/wp-content/
+/wp-content/*
+!/wp-content/themes/
+/wp-content/themes/*
+!/wp-content/themes/aic-tailwind/
+
+# ── Root files to keep ──
+!/.gitignore
+!/AGENTS.md
+
+# ── Theme-level ignores ──
+wp-content/themes/aic-tailwind/node_modules/
+
+# ── OS / IDE ──
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Claude Code ──
+.claude/
+CLAUDE.md
+**/CLAUDE.md
+
+# ── Logs ──
+*.log
