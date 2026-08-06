@@ -28,7 +28,7 @@ $hero_bg    = content_url('uploads/2026/07/conference-hero.jpg');
         </div>
 
         <h1 class="reveal text-white text-display-sm md:text-display-lg lg:text-[3.75rem] lg:leading-[1.08] font-bold mb-6 max-w-4xl mx-auto text-balance">
-            The <?php echo esc_html($edition); ?><sup class="text-accent"><?php echo preg_replace('/[0-9]+/', '', $edition); ?></sup> Annual International<br class="hidden sm:block"> Conference
+            The <?php echo intval($edition); ?><sup class="text-accent"><?php echo preg_replace('/[0-9]+/', '', $edition); ?></sup> Annual International<br class="hidden sm:block"> Conference
         </h1>
         <p class="reveal text-surface-400 text-body lg:text-body-lg lg:text-xl leading-relaxed max-w-2xl mx-auto mb-10">
             <?php echo esc_html($tagline); ?>
@@ -47,12 +47,8 @@ $hero_bg    = content_url('uploads/2026/07/conference-hero.jpg');
         </div>
 
         <div class="reveal flex flex-wrap justify-center gap-4">
-            <a href="https://conference.usk.ac.id/" target="_blank" rel="noopener" class="btn-accent btn-lg">
-                Submit Your Abstract
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-            </a>
-            <a href="#tracks" class="btn-lg border-2 border-white/20 text-white hover:bg-white/10 transition-all duration-200 rounded-lg px-8 py-4 font-medium text-body inline-flex items-center gap-2 no-underline">
-                Explore Tracks
+            <a href="#tracks" class="btn-accent btn-lg">
+                 Explore Tracks
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
             </a>
         </div>
