@@ -91,6 +91,13 @@ function aic_register_acf_fields() {
                 'default_value'=> 0,
             ],
             [
+                'key'          => 'field_speaker_email',
+                'label'        => 'Email',
+                'name'         => 'speaker_email',
+                'type'         => 'email',
+                'instructions' => 'Speaker email address',
+            ],
+            [
                 'key'          => 'field_speaker_order',
                 'label'        => 'Display Order',
                 'name'         => 'speaker_order',
