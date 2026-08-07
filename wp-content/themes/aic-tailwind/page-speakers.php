@@ -80,7 +80,7 @@ wp_reset_postdata();
                 <!-- Photo -->
                 <div class="aspect-[3/4] overflow-hidden bg-surface-200 relative">
                     <?php if ($kn['photo']): ?>
-                        <img src="<?php echo esc_url($kn['photo']); ?>" alt="<?php echo esc_attr($kn['name']); ?>" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+                        <img src="<?php echo esc_url($kn['photo']); ?>" alt="<?php echo esc_attr($kn['name']); ?>" class="w-full h-full object-cover" loading="lazy">
                     <?php else: ?>
                         <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-surface-100 to-surface-200">
                             <svg class="w-20 h-20 text-surface-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
@@ -127,7 +127,7 @@ wp_reset_postdata();
             <p class="text-ink-muted max-w-md">Specialized presentations from researchers and practitioners in their respective fields.</p>
         </div>
 
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 reveal-stagger">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 reveal-stagger">
             <?php foreach ($invited as $sp):
                 $ti = $track_info[$sp['track']] ?? null;
                 $tc = $ti['color'] ?? '#666';
@@ -137,7 +137,7 @@ wp_reset_postdata();
                 <!-- Photo -->
                 <div class="aspect-[3/4] overflow-hidden bg-surface-200">
                     <?php if ($sp['photo']): ?>
-                        <img src="<?php echo esc_url($sp['photo']); ?>" alt="<?php echo esc_attr($sp['name']); ?>" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+                        <img src="<?php echo esc_url($sp['photo']); ?>" alt="<?php echo esc_attr($sp['name']); ?>" class="w-full h-full object-cover" loading="lazy">
                     <?php else: ?>
                         <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-surface-100 to-surface-200">
                             <svg class="w-16 h-16 text-surface-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
@@ -145,15 +145,15 @@ wp_reset_postdata();
                     <?php endif; ?>
                 </div>
                 <!-- Info -->
-                <div class="p-5">
-                    <h3 class="text-heading-sm text-ink font-semibold mb-1 group-hover:text-primary transition-colors"><?php echo esc_html($sp['name']); ?></h3>
+                <div class="p-4">
+                    <h3 class="text-body font-semibold text-ink mb-0.5 group-hover:text-primary transition-colors"><?php echo esc_html($sp['name']); ?></h3>
                     <?php if ($sp['title']): ?>
-                        <p class="text-body-sm text-primary font-medium truncate"><?php echo esc_html($sp['title']); ?></p>
+                        <p class="text-caption text-primary font-medium truncate"><?php echo esc_html($sp['title']); ?></p>
                     <?php endif; ?>
                     <?php if ($sp['aff']): ?>
-                        <p class="text-caption text-ink-subtle mt-1 truncate"><?php echo esc_html($sp['aff']); ?></p>
+                        <p class="text-caption text-ink-subtle truncate"><?php echo esc_html($sp['aff']); ?></p>
                     <?php endif; ?>
-                    <span class="inline-block mt-3 px-2.5 py-0.5 rounded-full text-caption font-semibold" style="background: <?php echo esc_attr($tc); ?>15; color: <?php echo esc_attr($tc); ?>;"><?php echo esc_html($lbl); ?></span>
+                    <span class="inline-block mt-2 px-2 py-0.5 rounded-full text-[0.65rem] font-semibold" style="background: <?php echo esc_attr($tc); ?>15; color: <?php echo esc_attr($tc); ?>;"><?php echo esc_html($lbl); ?></span>
                 </div>
             </a>
             <?php endforeach; ?>

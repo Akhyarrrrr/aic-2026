@@ -49,7 +49,7 @@ $track_code  = aic_track_code($track_slug);
             <div class="lg:col-span-5">
                 <div class="aspect-[3/4] rounded-2xl overflow-hidden bg-surface-200 shadow-card">
                     <?php if ($photo): ?>
-                        <img src="<?php echo esc_url($photo); ?>" alt="<?php echo esc_attr($name); ?>" class="w-full h-full object-cover" loading="lazy">
+                        <img src="<?php echo esc_url($photo); ?>" alt="<?php echo esc_attr($name); ?>" class="w-full h-full object-contain p-2" loading="lazy">
                     <?php else: ?>
                         <div class="w-full h-full flex items-center justify-center">
                             <svg class="w-24 h-24 text-surface-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
@@ -76,7 +76,14 @@ $track_code  = aic_track_code($track_slug);
                 <p class="text-body-lg font-medium mb-2" style="color: <?php echo esc_attr($track_color ?: '#0D5F3A'); ?>;"><?php echo esc_html($speaker_title); ?></p>
                 <?php endif; ?>
                 <?php if ($affiliation): ?>
-                <p class="text-body text-ink-muted mb-6"><?php echo esc_html($affiliation); ?></p>
+                <p class="text-body text-ink-muted mb-2"><?php echo esc_html($affiliation); ?></p>
+                <?php endif; ?>
+                <?php $speaker_email = get_field('speaker_email'); ?>
+                <?php if ($speaker_email): ?>
+                <p class="text-body text-ink-muted mb-6">
+                    <svg class="w-4 h-4 inline-block mr-1.5 align-middle -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    <?php echo esc_html($speaker_email); ?>
+                </p>
                 <?php endif; ?>
 
                 <?php if (!empty(trim($bio))): ?>
@@ -118,7 +125,7 @@ $track_code  = aic_track_code($track_slug);
                     $rel_keynote  = get_field('speaker_is_keynote');
                 ?>
                 <a href="<?php the_permalink(); ?>" class="group no-underline bg-white rounded-xl border border-surface-300/60 overflow-hidden transition-all duration-300 hover:shadow-card-hover hover:-translate-y-0.5">
-                    <div class="aspect-[3/4] overflow-hidden bg-surface-200">
+                    <div class="aspect-[3/4] overflow-hidden bg-surface-200 relative">
                         <?php if ($rel_photo): ?>
                             <img src="<?php echo esc_url($rel_photo); ?>" alt="<?php the_title_attribute(); ?>" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
                         <?php else: ?>

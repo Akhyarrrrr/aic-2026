@@ -78,7 +78,7 @@ include get_template_directory() . '/template-parts/track-hero.php';
                         <a href="<?php echo esc_url($kn['url']); ?>" class="group block bg-white rounded-2xl border border-surface-300/60 overflow-hidden no-underline hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300">
                             <div class="aspect-[3/4] overflow-hidden bg-surface-200 relative">
                                 <?php if ($kn['photo']): ?>
-                                    <img src="<?php echo esc_url($kn['photo']); ?>" alt="<?php echo esc_attr($kn['name']); ?>" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+                                    <img src="<?php echo esc_url($kn['photo']); ?>" alt="<?php echo esc_attr($kn['name']); ?>" class="w-full h-full object-cover" loading="lazy">
                                 <?php else: ?>
                                     <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-surface-100 to-surface-200">
                                         <svg class="w-20 h-20 text-surface-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
@@ -112,22 +112,22 @@ include get_template_directory() . '/template-parts/track-hero.php';
                         <p class="text-body-sm font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr($track['color']); ?>;">Invited Speakers</p>
                     </div>
                     <h2 class="text-display text-ink mb-8">Experts in focus</h2>
-                    <div class="grid sm:grid-cols-2 gap-6 reveal-stagger">
+                    <div class="grid sm:grid-cols-3 lg:grid-cols-3 gap-6 reveal-stagger">
                         <?php foreach ($invited as $sp): ?>
                         <a href="<?php echo esc_url($sp['url']); ?>" class="group block bg-white rounded-2xl border border-surface-200 overflow-hidden no-underline hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300">
                             <div class="aspect-[3/4] overflow-hidden bg-surface-200">
                                 <?php if ($sp['photo']): ?>
-                                    <img src="<?php echo esc_url($sp['photo']); ?>" alt="<?php echo esc_attr($sp['name']); ?>" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+                                    <img src="<?php echo esc_url($sp['photo']); ?>" alt="<?php echo esc_attr($sp['name']); ?>" class="w-full h-full object-cover" loading="lazy">
                                 <?php else: ?>
                                     <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-surface-100 to-surface-200">
                                         <svg class="w-16 h-16 text-surface-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
                                     </div>
                                 <?php endif; ?>
                             </div>
-                            <div class="p-5">
-                                <h3 class="text-heading-sm text-ink font-semibold mb-1 transition-colors"><?php echo esc_html($sp['name']); ?></h3>
+                            <div class="p-4">
+                                <h3 class="text-body font-semibold text-ink mb-0.5 transition-colors"><?php echo esc_html($sp['name']); ?></h3>
                                 <?php if ($sp['title']): ?>
-                                    <p class="text-body-sm font-medium truncate" style="color: <?php echo esc_attr($track['color']); ?>;"><?php echo esc_html($sp['title']); ?></p>
+                                    <p class="text-caption font-medium truncate" style="color: <?php echo esc_attr($track['color']); ?>;"><?php echo esc_html($sp['title']); ?></p>
                                 <?php endif; ?>
                                 <?php if ($sp['aff']): ?>
                                     <p class="text-caption text-ink-subtle mt-1 truncate"><?php echo esc_html($sp['aff']); ?></p>

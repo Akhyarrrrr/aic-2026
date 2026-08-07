@@ -263,7 +263,7 @@ $chair_photo_url = $chair_photo_id ? wp_get_attachment_image_url($chair_photo_id
         </div>
 
         <!-- Keynote auto-rotating carousel -->
-        <div class="relative mb-20 reveal" id="keynote-carousel" data-interval="6000">
+        <div class="relative mb-20 reveal" id="keynote-carousel" data-interval="8000">
             <div class="relative px-4 sm:px-8 lg:px-24">
                 <?php foreach ($keynotes as $idx => $kn):
                     $tk = $kn['track'];
@@ -338,7 +338,7 @@ $chair_photo_url = $chair_photo_id ? wp_get_attachment_image_url($chair_photo_id
         </div>
 
         <!-- Invited speakers grid -->
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 reveal-stagger">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 reveal-stagger">
             <?php foreach ($invited as $iv):
                 $tk = $iv['track'];
                 $tc = $track_accent[$tk] ?? '#666';
@@ -348,7 +348,7 @@ $chair_photo_url = $chair_photo_id ? wp_get_attachment_image_url($chair_photo_id
                 <!-- Photo -->
                 <div class="aspect-[3/4] overflow-hidden bg-surface-200">
                     <?php if (has_post_thumbnail($iv['cpt_id'])): ?>
-                        <?php echo get_the_post_thumbnail($iv['cpt_id'], 'medium_large', ['class' => 'w-full h-full object-cover transition-transform duration-500 group-hover:scale-105', 'loading' => 'lazy']); ?>
+                        <?php echo get_the_post_thumbnail($iv['cpt_id'], 'medium_large', ['class' => 'w-full h-full object-cover', 'loading' => 'lazy']); ?>
                     <?php else: ?>
                         <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-surface-100 to-surface-200">
                             <svg class="w-16 h-16 text-surface-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
@@ -356,9 +356,9 @@ $chair_photo_url = $chair_photo_id ? wp_get_attachment_image_url($chair_photo_id
                     <?php endif; ?>
                 </div>
                 <!-- Info -->
-                <div class="p-5">
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="px-2 py-0.5 rounded-full text-[0.65rem] font-semibold" style="background: <?php echo esc_attr($tc); ?>15; color: <?php echo esc_attr($tc); ?>;"><?php echo esc_html($lbl); ?></span>
+                <div class="p-4">
+                    <div class="flex items-center gap-2 mb-1.5">
+                        <span class="px-2 py-0.5 rounded-full text-[0.6rem] font-semibold" style="background: <?php echo esc_attr($tc); ?>15; color: <?php echo esc_attr($tc); ?>;"><?php echo esc_html($lbl); ?></span>
                     </div>
                     <h3 class="text-body font-semibold text-ink leading-tight mb-0.5"><?php echo esc_html($iv['name']); ?></h3>
                     <?php if ($iv['title']): ?>
