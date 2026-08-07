@@ -16,7 +16,7 @@ class AIC_Nav_Walker extends Walker_Nav_Menu {
     function start_el(&$output, $item, $depth = 0, $args = null, $id = 0) {
         $classes   = empty($item->classes) ? [] : (array) $item->classes;
         $has_kids  = in_array('menu-item-has-children', $classes);
-        $is_active = in_array('current-menu-item', $classes) || in_array('current-page-ancestor', $classes) || in_array('current-menu-ancestor', $classes);
+        $is_active = in_array('current-menu-item', $classes);
 
         // <li> wrapper
         $li_classes = ['relative'];

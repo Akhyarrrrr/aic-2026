@@ -113,7 +113,7 @@ if (!$current_track && is_singular(['speaker', 'committee'])) {
                 <!-- Track CTA -->
                 <div class="hidden lg:flex items-center gap-3 ml-4">
                     <a href="https://conference.usk.ac.id/<?php echo esc_attr(aic_track_code($current_track)); ?>/" target="_blank" rel="noopener" class="btn-sm no-underline rounded-lg font-medium text-white transition-all hover:opacity-90 active:scale-[0.98] px-4 py-2" style="background: <?php echo esc_attr($track_colors[$current_track]); ?>">
-                        Submit Artikel
+                        Submit Abstract
                         <svg class="w-3.5 h-3.5 inline-block ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
                     </a>
                 </div>
@@ -138,9 +138,9 @@ if (!$current_track && is_singular(['speaker', 'committee'])) {
                     ?>
                 </nav>
 
-                <!-- Main CTA -->
+                <!-- Tracks CTA -->
                 <div class="hidden lg:flex items-center gap-3 ml-4">
-                    <a href="https://conference.usk.ac.id/" target="_blank" rel="noopener" class="btn-accent btn-sm">Submit Abstract</a>
+                    <a href="<?php echo esc_url(home_url('/tracks/')); ?>" class="btn-accent btn-sm">Explore Tracks</a>
                 </div>
 
                 <!-- Mobile Toggle (Main) -->
@@ -171,7 +171,7 @@ if (!$current_track && is_singular(['speaker', 'committee'])) {
                 <?php endforeach; ?>
                 <div class="h-px bg-surface-200 mx-3 mt-3"></div>
                 <a href="https://conference.usk.ac.id/<?php echo esc_attr(aic_track_code($current_track)); ?>/" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 w-full py-3.5 mt-2 rounded-xl text-white font-semibold text-body-sm transition-all hover:opacity-90 active:scale-[0.98] no-underline shadow-lg" style="background: <?php echo esc_attr($track_colors[$current_track]); ?>; box-shadow: 0 4px 14px <?php echo esc_attr($track_colors[$current_track]); ?>30;">
-                    Submit Artikel
+                    Submit Abstract
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
                 </a>
                 <?php else: ?>
@@ -218,31 +218,21 @@ if (!$current_track && is_singular(['speaker', 'committee'])) {
                         if (!$target_id) return false;
                         $current_id = get_the_ID();
                         if (!$current_id) return false;
-                        if ($target_id == $current_id) return true;
-                        if (is_singular() && $target_id == wp_get_post_parent_id($current_id)) return true;
-                        $ancestors = get_post_ancestors($current_id);
-                        if (in_array($target_id, $ancestors)) return true;
-                        return false;
+                        return $target_id == $current_id;
                     };
                 ?>
                 <div class="flex flex-col gap-0.5">
                     <?php foreach ($menu_tree as $item):
                         $has_children = !empty($item->children);
                         $is_active = $is_active_page($item->ID);
-                        $any_child_active = false;
-                        if ($has_children) {
-                            foreach ($item->children as $child) {
-                                if ($is_active_page($child->ID)) { $any_child_active = true; break; }
-                            }
-                        }
                     ?>
                     <?php if ($has_children): ?>
                     <div class="mobile-menu-group">
-                        <button type="button" class="mobile-submenu-toggle flex items-center justify-between w-full px-3 py-3 rounded-xl text-body-sm font-medium transition-all no-underline <?php echo ($is_active || $any_child_active) ? 'bg-primary/10 text-primary font-semibold' : 'text-ink-muted hover:bg-surface-100 hover:text-ink'; ?>">
+                        <button type="button" class="mobile-submenu-toggle flex items-center justify-between w-full px-3 py-3 rounded-xl text-body-sm font-medium transition-all no-underline <?php echo $is_active ? 'bg-primary/10 text-primary font-semibold' : 'text-ink-muted hover:bg-surface-100 hover:text-ink'; ?>">
                             <span><?php echo esc_html($item->title); ?></span>
-                            <svg class="w-4 h-4 shrink-0 transition-transform duration-200 <?php echo $any_child_active ? 'rotate-180' : ''; ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            <svg class="w-4 h-4 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </button>
-                        <div class="mobile-submenu <?php echo $any_child_active ? '' : 'hidden'; ?> pl-4 mt-0.5 space-y-0.5">
+                        <div class="mobile-submenu hidden pl-4 mt-0.5 space-y-0.5">
                             <?php foreach ($item->children as $child):
                                 $child_active = $is_active_page($child->ID);
                             ?>
