@@ -1,0 +1,21 @@
+# ── Build artifacts ──
+node_modules/
+
+# ── OS / IDE ──
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Claude Code ──
+.claude/
+CLAUDE.md
+**/CLAUDE.md
+
+# ── Logs ──
+*.log
+
+# ── WordPress debug log ──
+wp-content/debug.log
