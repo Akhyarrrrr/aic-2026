@@ -135,15 +135,19 @@ function aic_settings_page() {
             }
         }
         if ($tab === 'schedule') {
+            $allowed_tracks = ['all', 'se', 'els', 'ss'];
             foreach (['day1', 'day2'] as $day) {
                 $sched = [];
                 if (!empty($data['sched'][$day]['time'])) {
                     foreach ($data['sched'][$day]['time'] as $i => $time) {
+                        $trk = sanitize_text_field($data['sched'][$day]['track'][$i] ?? 'all');
+                        if (!in_array($trk, $allowed_tracks, true)) $trk = 'all';
                         $sched[] = [
                             'sched_time'     => sanitize_text_field($time),
                             'sched_activity' => sanitize_text_field($data['sched'][$day]['activity'][$i] ?? ''),
                             'sched_room'     => sanitize_text_field($data['sched'][$day]['room'][$i] ?? ''),
-                            'sched_type'     => sanitize_text_field($data['sched'][$day]['type'][$i] ?? 'parallel'),
+                            'sched_type'     => sanitize_text_field($data['sched'][$day]['type'][$i] ?? 'plenary'),
+                            'sched_track'    => $trk,
                         ];
                     }
                 }
@@ -431,23 +435,31 @@ function aic_field_repeater_cos() {
 function aic_field_repeater_schedule($label, $option_name, $input_prefix) {
     $sched = get_option($option_name, []);
     if (!is_array($sched)) $sched = [];
-    $types = ['registration' => 'Registration', 'welcome' => 'Welcome', 'keynote' => 'Keynote Session', 'parallel' => 'Parallel Session', 'panel' => 'Panel Discussion', 'closing' => 'Closing'];
+    $types = ['keynote' => 'Keynote', 'plenary' => 'Plenary', 'oral' => 'Oral', 'poster' => 'Poster', 'break' => 'Break', 'closing' => 'Closing'];
+    $tracks = ['all' => 'All Tracks', 'se' => 'AIC-SE', 'els' => 'AIC-ELS', 'ss' => 'AIC-SS'];
     ?>
     <tr>
         <th scope="row"><?php echo esc_html($label); ?></th>
         <td>
             <table class="wp-list-table widefat striped aic-sched-table">
-                <thead><tr><th>Time</th><th>Activity</th><th>Room</th><th>Type</th><th></th></tr></thead>
+                <thead><tr><th>Time</th><th>Activity</th><th>Room</th><th>Type</th><th>Track</th><th></th></tr></thead>
                 <tbody>
                     <?php foreach ($sched as $i => $s): ?>
                     <tr>
                         <td><input type="text" name="<?php echo esc_attr($input_prefix); ?>[time][]" value="<?php echo esc_attr($s['sched_time'] ?? ''); ?>" placeholder="08:00 - 08:30" style="width:120px"></td>
                         <td><input type="text" name="<?php echo esc_attr($input_prefix); ?>[activity][]" value="<?php echo esc_attr($s['sched_activity'] ?? ''); ?>" style="width:100%"></td>
-                        <td><input type="text" name="<?php echo esc_attr($input_prefix); ?>[room][]" value="<?php echo esc_attr($s['sched_room'] ?? ''); ?>" style="width:100px"></td>
+                        <td><input type="text" name="<?php echo esc_attr($input_prefix); ?>[room][]" value="<?php echo esc_attr($s['sched_room'] ?? ''); ?>" style="width:110px"></td>
                         <td>
                             <select name="<?php echo esc_attr($input_prefix); ?>[type][]">
                                 <?php foreach ($types as $k => $l): ?>
                                 <option value="<?php echo esc_attr($k); ?>" <?php selected($s['sched_type'] ?? '', $k); ?>><?php echo esc_html($l); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="<?php echo esc_attr($input_prefix); ?>[track][]">
+                                <?php foreach ($tracks as $k => $l): ?>
+                                <option value="<?php echo esc_attr($k); ?>" <?php selected($s['sched_track'] ?? 'all', $k); ?>><?php echo esc_html($l); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </td>
@@ -554,9 +566,12 @@ add_action('admin_footer', function () {
             var p = $(this).data('prefix');
             var tpl = '<tr><td><input type="text" name="' + p + '[time][]" placeholder="08:00 - 08:30" style="width:120px"></td>' +
                 '<td><input type="text" name="' + p + '[activity][]" style="width:100%"></td>' +
-                '<td><input type="text" name="' + p + '[room][]" style="width:100px"></td>' +
+                '<td><input type="text" name="' + p + '[room][]" style="width:110px"></td>' +
                 '<td><select name="' + p + '[type][]">' +
-                '<option value="registration">Registration</option><option value="welcome">Welcome</option><option value="keynote">Keynote Session</option><option value="parallel" selected>Parallel Session</option><option value="panel">Panel Discussion</option><option value="closing">Closing</option>' +
+                '<option value="keynote">Keynote</option><option value="plenary" selected>Plenary</option><option value="oral">Oral</option><option value="poster">Poster</option><option value="break">Break</option><option value="closing">Closing</option>' +
+                '</select></td>' +
+                '<td><select name="' + p + '[track][]">' +
+                '<option value="all" selected>All Tracks</option><option value="se">AIC-SE</option><option value="els">AIC-ELS</option><option value="ss">AIC-SS</option>' +
                 '</select></td><td><button type="button" class="button aic-row-remove">&times;</button></td></tr>';
             $(this).closest('td').find('.aic-sched-table tbody').append(tpl);
         });

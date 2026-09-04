@@ -18,19 +18,6 @@ $parent_id = $parent_id ?: get_the_ID();
 $hero_title    = 'Book of Program';
 $hero_subtitle = "Conference schedule and program for " . $track['name'] . ".";
 
-$presenters = get_posts([
-    'post_type'      => 'speaker',
-    'posts_per_page' => -1,
-    'meta_query'     => [
-        'relation' => 'AND',
-        ['key' => 'speaker_track', 'value' => $slug],
-        ['key' => 'speaker_is_keynote', 'value' => '0'],
-    ],
-    'meta_key' => 'speaker_order',
-    'orderby'  => 'meta_value_num',
-    'order'    => 'ASC',
-]);
-
 include get_template_directory() . '/template-parts/track-hero.php';
 ?>
 
@@ -44,9 +31,9 @@ include get_template_directory() . '/template-parts/track-hero.php';
                     <?php
                     $stats = [
                         ['val' => '2', 'label' => 'Conference Days'],
-                        ['val' => max(count($presenters), 48), 'label' => 'Presentations'],
-                        ['val' => '8', 'label' => 'Parallel Sessions'],
-                        ['val' => '2', 'label' => 'Keynote Sessions'],
+                        ['val' => '3', 'label' => 'Conference Tracks'],
+                        ['val' => '1', 'label' => 'Parallel Session'],
+                        ['val' => '1', 'label' => 'Keynote Session'],
                     ];
                     foreach ($stats as $st):
                     ?>
@@ -96,6 +83,7 @@ include get_template_directory() . '/template-parts/track-hero.php';
                                     'break'   => '',
                                     'closing' => 'Closing',
                                 ];
+                                $day1 = array_values(array_filter($day1, fn($s) => ($s['sched_track'] ?? 'all') === 'all' || ($s['sched_track'] ?? 'all') === $slug));
                                 foreach ($day1 as $i => $s):
                                     $type = $s['sched_type'];
                                     $bc   = $badge_colors[$type] ?? '';
@@ -134,6 +122,7 @@ include get_template_directory() . '/template-parts/track-hero.php';
                             <div class="p-6 space-y-0 divide-y divide-surface-300/40">
                                 <?php
                                 $day2 = get_option('aic_schedule_day2', []);
+                                $day2 = array_values(array_filter($day2, fn($s) => ($s['sched_track'] ?? 'all') === 'all' || ($s['sched_track'] ?? 'all') === $slug));
                                 foreach ($day2 as $i => $s):
                                     $type = $s['sched_type'];
                                     $bc   = $badge_colors[$type] ?? '';
@@ -161,52 +150,6 @@ include get_template_directory() . '/template-parts/track-hero.php';
 
                     <p class="text-body-sm text-ink-muted mt-6 text-center italic">Schedule is subject to change. Registered participants will be notified of any updates.</p>
                 </div>
-
-                <!-- Accepted Presentations -->
-                <?php if ($presenters): ?>
-                <div class="reveal">
-                    <div class="flex items-center gap-3 mb-2">
-                        <div class="w-1.5 h-6 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
-                        <p class="text-body-sm font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr($track['color']); ?>;">Accepted Presentations</p>
-                    </div>
-                    <h2 class="text-display text-ink mb-8"><?php echo count($presenters); ?> Presentations in <?php echo esc_html($track['code']); ?></h2>
-
-                    <div class="space-y-3 reveal-stagger">
-                        <?php
-                        $session_letters = ['A','B','C','D','E','F','G','H'];
-                        foreach ($presenters as $pi => $p):
-                            $p_affil  = get_field('speaker_affiliation', $p->ID);
-                            $p_title  = get_field('speaker_title', $p->ID);
-                            $abstract = !empty(trim(wp_strip_all_tags($p->post_content))) ? wp_trim_words($p->post_content, 20) : '';
-                            $session_idx = $pi % 8;
-                            $code = 'AIC-' . strtoupper($slug) . '-' . str_pad($pi + 1, 3, '0', STR_PAD_LEFT);
-                        ?>
-                        <div class="bg-white rounded-xl border border-surface-300/60 p-5 transition-shadow duration-300 hover:shadow-card-hover">
-                            <div class="flex items-start justify-between gap-3">
-                                <div class="min-w-0 flex-1">
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <span class="text-caption font-mono font-semibold tracking-wide px-1.5 py-0.5 rounded" style="background: <?php echo esc_attr($track['color']); ?>10; color: <?php echo esc_attr($track['color']); ?>;">
-                                            <?php echo esc_html($code); ?>
-                                        </span>
-                                        <span class="text-caption text-ink-subtle">Session <?php echo esc_html($session_letters[$session_idx]); ?></span>
-                                    </div>
-                                    <h3 class="text-body-sm font-semibold text-ink"><?php echo esc_html($p->post_title); ?></h3>
-                                    <?php if ($p_title || $p_affil): ?>
-                                    <p class="text-caption text-ink-muted mt-0.5"><?php echo esc_html($p_title); ?><?php echo ($p_title && $p_affil) ? ', ' : ''; ?><?php echo esc_html($p_affil); ?></p>
-                                    <?php endif; ?>
-                                    <?php if ($abstract): ?>
-                                    <p class="text-caption text-ink-subtle mt-2 leading-relaxed"><?php echo esc_html($abstract); ?></p>
-                                    <?php endif; ?>
-                                </div>
-                                <span class="shrink-0 inline-flex items-center px-2.5 py-1 rounded-full text-caption font-medium <?php echo $pi % 2 === 0 ? 'bg-accent/10 text-accent-600' : 'bg-primary/10 text-primary'; ?>">
-                                    <?php echo $pi % 2 === 0 ? 'Oral' : 'Poster'; ?>
-                                </span>
-                            </div>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-                <?php endif; ?>
 
                 <!-- Download -->
                 <div class="bg-white rounded-2xl border border-surface-300/60 p-8 lg:p-10 reveal">

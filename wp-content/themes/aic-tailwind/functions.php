@@ -15,6 +15,10 @@ require_once get_template_directory() . '/inc/settings-page.php';
 // require_once get_template_directory() . '/inc/seed-data.php';
 // aic_run_seed();
 
+// Schedule seed — runs once automatically (guarded by aic_schedule_seed_done option)
+require_once get_template_directory() . '/inc/seed-schedule.php';
+aic_seed_schedule();
+
 // ============================================
 // Theme Setup
 // ============================================

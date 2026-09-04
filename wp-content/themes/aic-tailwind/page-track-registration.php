@@ -43,10 +43,11 @@ $fee_nonpresenter_intl  = get_option('aic_fee_nonpresenter_intl', 'USD 35');
                      SECTION 1 — Registration Procedure
                      ============================================ -->
                 <div class="reveal">
-                    <div class="flex items-center gap-3 mb-6">
-                        <span class="w-1.5 h-6 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></span>
-                        <h2 class="text-heading-lg text-ink">Registration Procedure</h2>
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-1.5 h-6 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
+                        <p class="text-body-sm font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr($track['color']); ?>;">Step by Step</p>
                     </div>
+                    <h2 class="text-display text-ink mb-8">Registration Procedure</h2>
 
                     <div class="grid sm:grid-cols-2 gap-5">
                         <!-- Step 1 -->
@@ -57,8 +58,7 @@ $fee_nonpresenter_intl  = get_option('aic_fee_nonpresenter_intl', 'USD 35');
                                 </div>
                                 <h3 class="text-body font-semibold text-ink">Receive Letter of Acceptance</h3>
                             </div>
-                                <p class="text-body-sm text-ink-muted leading-relaxed">Registration as <strong class="text-ink">presenter</strong> should be done only after receiving the <strong class="text-ink">Letter of Acceptance (LoA)</strong> for your abstract.</p>
-                            </div>
+                            <p class="text-body-sm text-ink-muted leading-relaxed">Registration as <strong class="text-ink">presenter</strong> should be done only after receiving the <strong class="text-ink">Letter of Acceptance (LoA)</strong> for your abstract.</p>
                         </div>
 
                         <!-- Step 2 -->
@@ -69,8 +69,7 @@ $fee_nonpresenter_intl  = get_option('aic_fee_nonpresenter_intl', 'USD 35');
                                 </div>
                                 <h3 class="text-body font-semibold text-ink">Pay Registration Fee</h3>
                             </div>
-                                <p class="text-body-sm text-ink-muted leading-relaxed">Complete your registration by paying the registration fee and filling out the <strong class="text-ink">registration form</strong> as instructed in the LoA email.</p>
-                            </div>
+                            <p class="text-body-sm text-ink-muted leading-relaxed">Complete your registration by paying the registration fee and filling out the <strong class="text-ink">registration form</strong> as instructed in the LoA email.</p>
                         </div>
                     </div>
                 </div>
@@ -79,10 +78,11 @@ $fee_nonpresenter_intl  = get_option('aic_fee_nonpresenter_intl', 'USD 35');
                      SECTION 2 — Registration Fees
                      ============================================ -->
                 <div class="reveal">
-                    <div class="flex items-center gap-3 mb-6">
-                        <span class="w-1.5 h-6 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></span>
-                        <h2 class="text-heading-lg text-ink">Registration Fees</h2>
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-1.5 h-6 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
+                        <p class="text-body-sm font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr($track['color']); ?>;">Fees</p>
                     </div>
+                    <h2 class="text-display text-ink mb-8">Registration Fees</h2>
 
                     <div class="grid sm:grid-cols-2 gap-5">
                         <!-- Presenter -->
@@ -125,10 +125,11 @@ $fee_nonpresenter_intl  = get_option('aic_fee_nonpresenter_intl', 'USD 35');
                      SECTION 3 — Important Notes (per-track)
                      ============================================ -->
                 <div class="reveal">
-                    <div class="flex items-center gap-3 mb-6">
-                        <span class="w-1.5 h-6 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></span>
-                        <h2 class="text-heading-lg text-ink">Important Notes</h2>
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-1.5 h-6 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
+                        <p class="text-body-sm font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr($track['color']); ?>;">Please Note</p>
                     </div>
+                    <h2 class="text-display text-ink mb-8">Important Notes</h2>
 
                     <div class="rounded-2xl border-l-4 p-6 lg:p-8" style="border-left-color: <?php echo esc_attr($track['color']); ?>; background: <?php echo esc_attr($track['color']); ?>05;">
                         <div class="flex gap-4">
@@ -159,10 +160,11 @@ $fee_nonpresenter_intl  = get_option('aic_fee_nonpresenter_intl', 'USD 35');
                      SECTION 4 — Abstract & Full Paper Submission
                      ============================================ -->
                 <div class="reveal">
-                    <div class="flex items-center gap-3 mb-6">
-                        <span class="w-1.5 h-6 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></span>
-                        <h2 class="text-heading-lg text-ink">Abstract &amp; Full Paper Submission</h2>
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-1.5 h-6 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
+                        <p class="text-body-sm font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr($track['color']); ?>;">Guidelines</p>
                     </div>
+                    <h2 class="text-display text-ink mb-8">Abstract &amp; Full Paper Submission</h2>
 
                     <div class="bg-white rounded-2xl border border-surface-200 p-6 lg:p-8 space-y-0">
                         <?php
@@ -215,10 +217,11 @@ $fee_nonpresenter_intl  = get_option('aic_fee_nonpresenter_intl', 'USD 35');
                      SECTION 5 — Publication (per-track)
                      ============================================ -->
                 <div class="reveal">
-                    <div class="flex items-center gap-3 mb-6">
-                        <span class="w-1.5 h-6 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></span>
-                        <h2 class="text-heading-lg text-ink">Publication</h2>
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-1.5 h-6 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
+                        <p class="text-body-sm font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr($track['color']); ?>;">Where We Publish</p>
                     </div>
+                    <h2 class="text-display text-ink mb-8">Publication</h2>
 
                     <?php if ($pub_info_text): ?>
                         <div class="bg-white rounded-2xl border border-surface-200 p-6 lg:p-8">
