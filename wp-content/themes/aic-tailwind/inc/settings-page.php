@@ -84,9 +84,10 @@ function aic_settings_page() {
             if (!empty($data['dates']['label'])) {
                 foreach ($data['dates']['label'] as $i => $label) {
                     $dates[] = [
-                        'date_label' => sanitize_text_field($label),
-                        'date_value' => sanitize_text_field($data['dates']['value'][$i] ?? ''),
-                        'date_desc'  => sanitize_text_field($data['dates']['desc'][$i] ?? ''),
+                        'date_label'     => sanitize_text_field($label),
+                        'date_value'     => sanitize_text_field($data['dates']['value'][$i] ?? ''),
+                        'date_value_old' => sanitize_text_field($data['dates']['old'][$i] ?? ''),
+                        'date_desc'      => sanitize_text_field($data['dates']['desc'][$i] ?? ''),
                     ];
                 }
             }
@@ -371,12 +372,13 @@ function aic_field_repeater_dates() {
         <th scope="row">Important Dates</th>
         <td>
             <table class="wp-list-table widefat striped" id="aic-dates-table">
-                <thead><tr><th>Event</th><th>Date</th><th>Description</th><th></th></tr></thead>
+                <thead><tr><th>Event</th><th>Date</th><th>Old Date (struck)&nbsp;</th><th>Description</th><th></th></tr></thead>
                 <tbody>
                     <?php foreach ($dates as $i => $d): ?>
                     <tr>
                         <td><input type="text" name="aic[dates][label][]" value="<?php echo esc_attr($d['date_label'] ?? ''); ?>" class="regular-text"></td>
                         <td><input type="text" name="aic[dates][value][]" value="<?php echo esc_attr($d['date_value'] ?? ''); ?>" class="regular-text"></td>
+                        <td><input type="text" name="aic[dates][old][]" value="<?php echo esc_attr($d['date_value_old'] ?? ''); ?>" class="regular-text" style="width:100%"></td>
                         <td><input type="text" name="aic[dates][desc][]" value="<?php echo esc_attr($d['date_desc'] ?? ''); ?>" style="width:100%"></td>
                         <td><button type="button" class="button aic-row-remove">&times;</button></td>
                     </tr>
@@ -545,7 +547,7 @@ add_action('admin_footer', function () {
 
         // Dates repeater
         $('#aic-dates-add').on('click', function(){
-            var tpl = '<tr><td><input type="text" name="aic[dates][label][]" class="regular-text"></td><td><input type="text" name="aic[dates][value][]" class="regular-text"></td><td><input type="text" name="aic[dates][desc][]" style="width:100%"></td><td><button type="button" class="button aic-row-remove">&times;</button></td></tr>';
+            var tpl = '<tr><td><input type="text" name="aic[dates][label][]" class="regular-text"></td><td><input type="text" name="aic[dates][value][]" class="regular-text"></td><td><input type="text" name="aic[dates][old][]" class="regular-text" style="width:100%"></td><td><input type="text" name="aic[dates][desc][]" style="width:100%"></td><td><button type="button" class="button aic-row-remove">&times;</button></td></tr>';
             $('#aic-dates-table tbody').append(tpl);
         });
 

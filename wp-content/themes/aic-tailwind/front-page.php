@@ -411,8 +411,14 @@ $chair_photo_url = $chair_photo_id ? wp_get_attachment_image_url($chair_photo_id
                     <?php endif; ?>
                 </div>
                 <div class="rounded-xl p-5 -mt-0.5 flex-1">
-                    <p class="text-accent text-caption sm:text-body-sm font-semibold uppercase tracking-wider mb-1 break-words"><?php echo esc_html($d['date_value']); ?></p>
-                    <h4 class="text-white text-heading-sm font-semibold mb-1"><?php echo esc_html($d['date_label']); ?></h4>
+                    <p class="text-accent text-caption sm:text-body-sm font-semibold uppercase tracking-wider mb-1 break-words">
+                    <?php if (aic_deadline_extended($d)): ?>
+                        <?php aic_render_deadline_value($d, 'block text-caption line-through text-white/45 mb-0.5', 'block text-caption sm:text-body-sm font-semibold uppercase tracking-wider text-accent'); ?>
+                    <?php else: ?>
+                        <?php echo esc_html($d['date_value']); ?>
+                    <?php endif; ?>
+                    </p>
+                    <h4 class="text-white text-heading-sm font-semibold mb-1"><?php echo esc_html($d['date_label']); ?><?php if (aic_deadline_extended($d)) aic_deadline_badge(); ?></h4>
                     <?php if (!empty($d['date_desc'])): ?>
                     <p class="text-surface-400 text-body-sm"><?php echo esc_html($d['date_desc']); ?></p>
                     <?php endif; ?>

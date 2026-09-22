@@ -68,7 +68,7 @@ get_template_part('template-parts/hero-inner');
             $important_dates = get_option('aic_important_dates', []);
             if (empty($important_dates)) {
                 $important_dates = [
-                    ['date_label' => 'Abstract Submission Deadline', 'date_value' => 'September 19, 2026', 'date_desc' => ''],
+                    ['date_label' => 'Abstract Submission Deadline', 'date_value' => 'October 3, 2026', 'date_value_old' => 'September 19, 2026', 'date_desc' => ''],
                     ['date_label' => 'Abstract Acceptance Notification', 'date_value' => '2-3 Days After Submission', 'date_desc' => ''],
                     ['date_label' => 'Full Paper Submission', 'date_value' => 'October 31, 2026', 'date_desc' => ''],
                     ['date_label' => 'Conference Days', 'date_value' => 'November 4-5, 2026', 'date_desc' => ''],
@@ -86,12 +86,12 @@ get_template_part('template-parts/hero-inner');
                     <?php foreach ($important_dates as $i => $d): ?>
                     <div class="flex items-center justify-between py-4 <?php echo $i < count($important_dates) - 1 ? 'border-b border-surface-200' : ''; ?>">
                         <div>
-                            <span class="text-body text-ink-muted"><?php echo esc_html($d['date_label']); ?></span>
+                            <span class="text-body text-ink-muted"><?php echo esc_html($d['date_label']); ?><?php if (aic_deadline_extended($d)) aic_deadline_badge(); ?></span>
                             <?php if (!empty($d['date_desc'])): ?>
                                 <p class="text-body-sm text-ink-subtle mt-1"><?php echo esc_html($d['date_desc']); ?></p>
                             <?php endif; ?>
                         </div>
-                        <span class="text-body-sm font-semibold text-ink shrink-0 ml-4"><?php echo esc_html($d['date_value']); ?></span>
+                        <span class="text-body-sm font-semibold text-ink shrink-0 ml-4 text-right"><?php aic_render_deadline_value($d); ?></span>
                     </div>
                     <?php endforeach; ?>
                 </div>

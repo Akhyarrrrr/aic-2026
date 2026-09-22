@@ -33,7 +33,7 @@ function aic_run_seed() {
 
     // Important Dates
     update_option('aic_important_dates', [
-        ['date_label' => 'Abstract Submission Deadline',       'date_value' => 'September 19, 2026',            'date_desc' => ''],
+        ['date_label' => 'Abstract Submission Deadline',       'date_value' => 'October 3, 2026',                'date_value_old' => 'September 19, 2026',      'date_desc' => ''],
         ['date_label' => 'Abstract Acceptance Notification',   'date_value' => '2-3 Days After Submission',    'date_desc' => 'Rolling review process'],
         ['date_label' => 'Full Paper Submission',              'date_value' => 'October 31, 2026',             'date_desc' => ''],
         ['date_label' => 'Conference Days',                    'date_value' => 'November 4-5, 2026',           'date_desc' => 'On-site & Online'],

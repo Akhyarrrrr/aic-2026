@@ -207,6 +207,35 @@ function aic_track_code($slug) {
 }
 
 // ============================================
+// Extended deadline helpers (old date struck + new date)
+// ============================================
+function aic_deadline_extended($d) {
+    $old = trim((string) ($d['date_value_old'] ?? ''));
+    $new = trim((string) ($d['date_value'] ?? ''));
+    return $old !== '' && $old !== $new;
+}
+
+function aic_render_deadline_value($d, $old_class = 'block text-caption line-through text-ink-muted mb-0.5', $new_class = 'block text-body-sm font-semibold text-ink') {
+    $old = trim((string) ($d['date_value_old'] ?? ''));
+    $new = trim((string) ($d['date_value'] ?? ''));
+    if (!aic_deadline_extended($d)) {
+        echo esc_html($new);
+        return;
+    }
+    printf(
+        '<span class="%s">%s</span><span class="%s">%s</span>',
+        esc_attr($old_class),
+        esc_html($old),
+        esc_attr($new_class),
+        esc_html($new)
+    );
+}
+
+function aic_deadline_badge() {
+    echo '<span class="inline-flex items-center ml-2 px-2.5 py-1 rounded-full bg-accent text-primary text-[10px] font-bold uppercase tracking-widest leading-none align-middle">EXTENDED</span>';
+}
+
+// ============================================
 // Fallback footer links (when no menu assigned)
 // ============================================
 function aic_fallback_footer_links() {

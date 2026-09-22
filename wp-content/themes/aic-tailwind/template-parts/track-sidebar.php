@@ -27,8 +27,14 @@ $tmpl_url    = $tmpl_file_id ? wp_get_attachment_url($tmpl_file_id) : '';
                 foreach ($dates as $i => $d):
             ?>
             <div class="flex items-center justify-between py-3 <?php echo $i < $count - 1 ? 'border-b border-white/15' : ''; ?>">
-                <p class="text-caption font-medium text-white/70"><?php echo esc_html($d['date_label']); ?></p>
-                <p class="text-body-sm font-bold text-white text-right ml-4 shrink-0"><?php echo esc_html($d['date_value']); ?></p>
+                <p class="text-caption font-medium text-white/70"><?php echo esc_html($d['date_label']); ?><?php if (aic_deadline_extended($d)) aic_deadline_badge(); ?></p>
+                <p class="text-body-sm font-bold text-white text-right ml-4 shrink-0">
+                <?php if (aic_deadline_extended($d)): ?>
+                    <?php aic_render_deadline_value($d, 'block text-caption line-through text-white/45 mb-0.5 text-right', 'block text-body-sm font-bold text-white'); ?>
+                <?php else: ?>
+                    <?php echo esc_html($d['date_value']); ?>
+                <?php endif; ?>
+                </p>
             </div>
             <?php
                 endforeach;
