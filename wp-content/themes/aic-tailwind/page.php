@@ -12,7 +12,7 @@ $has_content = !empty(trim(wp_strip_all_tags(get_the_content())));
 $parent_title = $parent_id ? get_the_title($parent_id) : '';
 $title = get_the_title();
 $subtitle = $parent_id ? "Part of {$parent_title}" : '';
-get_template_part('template-parts/hero-inner');
+get_template_part('template-parts/hero-inner', null, ['title' => $title, 'subtitle' => $subtitle]);
 ?>
 
 <!-- Content -->
@@ -20,7 +20,7 @@ get_template_part('template-parts/hero-inner');
     <div class="container-custom">
         <?php while (have_posts()): the_post(); ?>
             <?php if ($has_content): ?>
-                <div class="max-w-5xl mx-auto prose-custom bg-white rounded-2xl border border-surface-300/60 p-8 lg:p-12 reveal">
+                <div class="max-w-5xl mx-auto prose-custom bg-white rounded-2xl border border-surface-300/60 p-5 sm:p-8 lg:p-12 reveal">
                     <?php echo wp_kses_post(aic_clean_colibri(get_the_content())); ?>
                 </div>
             <?php else: ?>

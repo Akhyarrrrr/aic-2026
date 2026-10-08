@@ -77,6 +77,17 @@ function aic_tailwind_assets() {
 }
 add_action('wp_enqueue_scripts', 'aic_tailwind_assets');
 
+// Keep the USK favicon available even when the old Site Icon attachment is missing.
+function aic_usk_site_icon_url($url, $size, $blog_id) {
+    if ($blog_id && (int) $blog_id !== get_current_blog_id()) return $url;
+    $icon_size = $size >= 270 ? 512 : ($size >= 192 ? 192 : ($size >= 180 ? 180 : 32));
+    $relative = '/assets/icons/usk-' . $icon_size . '.png';
+    $path = get_template_directory() . $relative;
+    if (!is_file($path)) return $url;
+    return add_query_arg('ver', (string) filemtime($path), get_template_directory_uri() . $relative);
+}
+add_filter('get_site_icon_url', 'aic_usk_site_icon_url', 10, 3);
+
 // ============================================
 // Preconnect to Google Fonts (reduces font load latency)
 // ============================================
@@ -206,33 +217,149 @@ function aic_track_code($slug) {
     return $codes[$slug] ?? '';
 }
 
+function aic_track_ink($slug) {
+    return $slug === 'se' ? '#885000' : aic_track_color($slug);
+}
+
+function aic_track_foreground($slug) {
+    return '#FFFFFF';
+}
+
+function aic_page_track_slug($post_id = 0) {
+    $post_id = $post_id ?: get_queried_object_id();
+    foreach (array_merge([$post_id], get_post_ancestors($post_id)) as $id) {
+        $slug = get_post_field('post_name', $id);
+        if (in_array($slug, ['se', 'els', 'ss'], true)) return $slug;
+    }
+    return '';
+}
+
+function aic_get_speakers($track = '') {
+    static $speakers = null;
+    if ($speakers === null) {
+        $query = new WP_Query([
+            'post_type' => 'speaker',
+            'post_status' => 'publish',
+            'posts_per_page' => -1,
+            'orderby' => 'ID',
+            'order' => 'ASC',
+            'no_found_rows' => true,
+        ]);
+        // A missing display-order field must not hide a published speaker.
+        usort($query->posts, function ($a, $b) {
+            return ((int) get_field('speaker_order', $a->ID) <=> (int) get_field('speaker_order', $b->ID)) ?: ($a->ID <=> $b->ID);
+        });
+        $groups = [];
+        foreach ($query->posts as $post) {
+            $affiliation = (string) get_field('speaker_affiliation', $post->ID);
+            $keynote = (bool) get_field('speaker_is_keynote', $post->ID);
+            $position = (string) get_field('speaker_title', $post->ID);
+            $photo_id = get_post_thumbnail_id($post->ID);
+            // Only merge records with matching identity, institution, photo and role.
+            $identity = $affiliation !== '' && $photo_id
+                ? serialize([sanitize_title($post->post_title), sanitize_title($affiliation), $position, $photo_id, $keynote])
+                : (string) $post->ID;
+            $tracks = array_values(array_intersect((array) get_field('speaker_track', $post->ID), ['se', 'els', 'ss', 'all']));
+            if (!isset($groups[$identity])) {
+                $groups[$identity] = [
+                    'id' => $post->ID,
+                    'ids' => [],
+                    'name' => $post->post_title,
+                    'title' => $position,
+                    'affiliation' => $affiliation,
+                    'is_keynote' => $keynote,
+                    'tracks' => [],
+                    'track_records' => [],
+                    'url' => get_permalink($post->ID),
+                ];
+            }
+            $groups[$identity]['ids'][] = $post->ID;
+            $groups[$identity]['tracks'] = array_values(array_unique(array_merge($groups[$identity]['tracks'], $tracks)));
+            foreach ($tracks as $slug) {
+                if (!isset($groups[$identity]['track_records'][$slug])) {
+                    $groups[$identity]['track_records'][$slug] = ['id' => $post->ID, 'url' => get_permalink($post->ID)];
+                }
+            }
+        }
+        $speakers = array_values($groups);
+    }
+    if ($track === '') return $speakers;
+    $filtered = array_values(array_filter($speakers, function ($speaker) use ($track) {
+        return in_array($track, $speaker['tracks'], true) || in_array('all', $speaker['tracks'], true);
+    }));
+    foreach ($filtered as &$speaker) {
+        $record = $speaker['track_records'][$track] ?? $speaker['track_records']['all'] ?? null;
+        if ($record) {
+            $speaker['id'] = $record['id'];
+            $speaker['url'] = $record['url'];
+        }
+    }
+    unset($speaker);
+    return $filtered;
+}
+
+function aic_get_speaker($post_id) {
+    foreach (aic_get_speakers() as $speaker) {
+        if (in_array((int) $post_id, $speaker['ids'], true)) return $speaker;
+    }
+    return null;
+}
+
+function aic_speaker_track_badges($tracks) {
+    if (in_array('all', $tracks, true)) $tracks = ['all'];
+    foreach (['se', 'els', 'ss', 'all'] as $slug) {
+        if (!in_array($slug, $tracks, true)) continue;
+        printf('<span class="speaker-track" style="--badge-color: %s; --badge-ink: %s;">%s</span>',
+            esc_attr(aic_track_color($slug)), esc_attr(aic_track_ink($slug)),
+            esc_html($slug === 'all' ? 'All Tracks' : aic_track_code($slug)));
+    }
+}
+
+// /2023/ is a WordPress date archive, not an available conference website.
+function aic_unavailable_conference_archive() {
+    if (!is_year() || (int) get_query_var('year') !== 2023 || is_feed()) return;
+    global $wp_query;
+    $wp_query->set_404();
+    status_header(404);
+    nocache_headers();
+    remove_action('template_redirect', 'redirect_canonical');
+}
+add_action('template_redirect', 'aic_unavailable_conference_archive', 1);
+
 // ============================================
 // Extended deadline helpers (old date struck + new date)
 // ============================================
-function aic_deadline_extended($d) {
-    $old = trim((string) ($d['date_value_old'] ?? ''));
+function aic_deadline_history($d) {
     $new = trim((string) ($d['date_value'] ?? ''));
-    return $old !== '' && $old !== $new;
+    $history = [];
+    // Keep the existing option field, with one previous deadline per line.
+    foreach (preg_split('/\R|;/', (string) ($d['date_value_old'] ?? '')) as $old) {
+        $old = trim($old);
+        if ($old !== '' && $old !== $new && !in_array($old, $history, true)) $history[] = $old;
+    }
+    return $history;
+}
+
+function aic_deadline_extended($d) {
+    return trim((string) ($d['date_value'] ?? '')) !== '' && count(aic_deadline_history($d)) > 0;
 }
 
 function aic_render_deadline_value($d, $old_class = 'block text-caption line-through text-ink-muted mb-0.5', $new_class = 'block text-body-sm font-semibold text-ink') {
-    $old = trim((string) ($d['date_value_old'] ?? ''));
     $new = trim((string) ($d['date_value'] ?? ''));
-    if (!aic_deadline_extended($d)) {
-        echo esc_html($new);
-        return;
+    $history = aic_deadline_history($d);
+    if ($history) {
+        echo '<span class="deadline-history">';
+        foreach ($history as $old) {
+            printf('<del class="%s">%s</del>', esc_attr($old_class), esc_html($old));
+        }
+        echo '</span>';
     }
-    printf(
-        '<span class="%s">%s</span><span class="%s">%s</span>',
-        esc_attr($old_class),
-        esc_html($old),
-        esc_attr($new_class),
-        esc_html($new)
-    );
+    printf('<span class="deadline-current %s">%s</span>', esc_attr($new_class), esc_html($new));
 }
 
-function aic_deadline_badge() {
-    echo '<span class="inline-flex items-center ml-2 px-2.5 py-1 rounded-full bg-accent text-primary text-[10px] font-bold uppercase tracking-widest leading-none align-middle">EXTENDED</span>';
+function aic_deadline_badge($track_slug = '') {
+    $style = $track_slug ? ' style="background: #FFFFFF; color: ' . esc_attr(aic_track_ink($track_slug)) . ';"' : '';
+    echo '<span class="deadline-badge inline-flex items-center px-2.5 py-1 rounded-full bg-accent text-white text-[10px] font-bold uppercase tracking-wider leading-none align-middle"' . $style . '>EXTENDED</span>';
 }
 
 // ============================================
@@ -247,14 +374,14 @@ function aic_fallback_footer_links() {
         '/conference/registration-fee/' => 'Registration',
     ];
     foreach ($links as $url => $label) {
-        echo '<li><a href="' . esc_url(home_url($url)) . '" class="block py-1.5 text-surface-400 hover:text-accent transition-colors no-underline text-body-sm">' . esc_html($label) . '</a></li>';
+        echo '<li><a href="' . esc_url(home_url($url)) . '" class="flex items-center min-h-[44px] py-1.5 text-surface-400 hover:text-accent transition-colors no-underline text-body-sm">' . esc_html($label) . '</a></li>';
     }
 }
 
 // Add mobile-friendly touch padding to footer nav menu links
 add_filter('nav_menu_link_attributes', function($atts, $item, $args) {
     if ($args->theme_location === 'footer') {
-        $atts['class'] = ($atts['class'] ?? '') . ' block py-1.5 text-surface-400 hover:text-accent transition-colors no-underline text-body-sm';
+        $atts['class'] = ($atts['class'] ?? '') . ' flex items-center min-h-[44px] py-1.5 text-surface-400 hover:text-accent transition-colors no-underline text-body-sm';
     }
     return $atts;
 }, 10, 3);

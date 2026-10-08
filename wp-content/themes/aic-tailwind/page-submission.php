@@ -8,7 +8,7 @@ get_header();
 $title    = 'Paper Submission & Publication';
 $subtitle = 'Step-by-step guide to submitting your paper and publication details for AIC 2026.';
 ?>
-<?php get_template_part('template-parts/hero-inner'); ?>
+<?php get_template_part('template-parts/hero-inner', null, ['title' => $title, 'subtitle' => $subtitle]); ?>
 
 <section class="section bg-surface">
     <div class="container-custom">
@@ -16,7 +16,7 @@ $subtitle = 'Step-by-step guide to submitting your paper and publication details
         <!-- Submission Steps — two-column layout -->
         <div class="grid lg:grid-cols-12 gap-12 lg:gap-20 mb-20 reveal">
             <div class="lg:col-span-5">
-                <p class="text-accent text-body-sm font-semibold uppercase tracking-wider mb-4">How It Works</p>
+                <p class="text-accent-700 text-body-sm font-semibold uppercase tracking-wider mb-4">How It Works</p>
                 <h2 class="text-display text-ink mb-6 text-balance">
                     Submission<br class="hidden lg:block"> Process
                 </h2>
@@ -60,7 +60,7 @@ $subtitle = 'Step-by-step guide to submitting your paper and publication details
                     </div>
                     <h2 class="text-heading-lg text-ink">Online Submission</h2>
                 </div>
-                <div class="grid sm:grid-cols-3 gap-3">
+                <div class="download-grid">
                     <?php
                     $submit_urls = [
                         'se'  => get_option('aic_submit_url_se', 'https://conference.usk.ac.id/AIC-SE/'),
@@ -72,7 +72,7 @@ $subtitle = 'Step-by-step guide to submitting your paper and publication details
                         $code  = aic_track_code($slug);
                     ?>
                     <a href="<?php echo esc_url($url); ?>" target="_blank" rel="noopener" class="flex flex-col items-center text-center p-5 rounded-xl border-2 border-surface-200 hover:shadow-card transition-all no-underline group">
-                        <span class="inline-block px-3 py-1 rounded-full text-caption font-semibold uppercase tracking-wider mb-3" style="background: <?php echo esc_attr($color); ?>15; color: <?php echo esc_attr($color); ?>;"><?php echo esc_html($code); ?></span>
+                        <span class="inline-block px-3 py-1 rounded-full text-caption font-semibold uppercase tracking-wider mb-3" style="background: <?php echo esc_attr($color); ?>15; color: <?php echo esc_attr(aic_track_ink($slug)); ?>;"><?php echo esc_html($code); ?></span>
                         <p class="text-body-sm text-ink font-medium group-hover:text-primary transition-colors">Submit to <?php echo esc_html($code); ?></p>
                         <svg class="w-4 h-4 text-surface-400 mt-2 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
                     </a>
@@ -113,7 +113,7 @@ $subtitle = 'Step-by-step guide to submitting your paper and publication details
             <div class="relative z-10">
                 <h2 class="text-display-sm text-white mb-4">Ready to Submit?</h2>
                 <p class="text-surface-400 text-body-lg mb-8 max-w-xl mx-auto">Submit your abstract today and be part of AIC <?php echo intval(get_option('aic_edition', '16')); ?>.</p>
-                <a href="https://conference.usk.ac.id/" target="_blank" rel="noopener" class="btn-accent btn-lg no-underline">
+                <a href="<?php echo esc_url(home_url('/call-for-paper/')); ?>" class="btn-accent btn-lg no-underline">
                     View Call for Paper
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                 </a>

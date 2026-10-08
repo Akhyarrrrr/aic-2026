@@ -8,7 +8,7 @@ get_header();
 <?php
 $title    = 'Call for Paper';
 $subtitle = 'Submit your research to the 16th Annual International Conference 2026.';
-get_template_part('template-parts/hero-inner');
+get_template_part('template-parts/hero-inner', null, ['title' => $title, 'subtitle' => $subtitle]);
 ?>
 
 <!-- Content -->
@@ -18,7 +18,7 @@ get_template_part('template-parts/hero-inner');
         <!-- Intro — wide layout like homepage About -->
         <div class="grid lg:grid-cols-12 gap-12 lg:gap-20 mb-16 reveal">
             <div class="lg:col-span-5">
-                <p class="text-accent text-body-sm font-semibold uppercase tracking-wider mb-4">Call for Papers</p>
+                <p class="text-accent-700 text-body-sm font-semibold uppercase tracking-wider mb-4">Call for Papers</p>
                 <h2 class="text-display-sm lg:text-display text-ink mb-6 text-balance">
                     Share your research<br class="hidden lg:block"> with the world
                 </h2>
@@ -46,14 +46,15 @@ get_template_part('template-parts/hero-inner');
                     ['name' => 'Social Sciences', 'code' => 'AIC-SS', 'color' => '#AA39AF', 'desc' => 'Sociology, Economics, Education, Psychology, Political Science, Law, and Humanities.', 'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>'],
                 ];
                 foreach ($cfp_tracks as $t):
+                    $track_ink = aic_track_ink(strtolower(substr($t['code'], 4)));
                 ?>
                 <div class="group relative bg-white rounded-2xl border border-surface-300/60 p-8 lg:p-10 transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover"
-                     style="--track-hover: <?php echo esc_attr($t['color']); ?>;">
+                     style="--track-hover: <?php echo esc_attr($track_ink); ?>;">
                     <!-- Color accent top bar -->
                     <div class="absolute top-0 left-0 right-0 h-1 rounded-t-2xl transition-all duration-300 group-hover:h-1.5" style="background: <?php echo esc_attr($t['color']); ?>;"></div>
 
                     <div class="mb-4" style="color: <?php echo esc_attr($t['color']); ?>"><?php echo $t['icon']; ?></div>
-                    <span class="text-caption font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr($t['color']); ?>;"><?php echo esc_html($t['code']); ?></span>
+                    <span class="text-caption font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr($track_ink); ?>;"><?php echo esc_html($t['code']); ?></span>
                     <h3 class="text-heading text-ink font-semibold mt-2 mb-3 group-hover:opacity-80 transition-opacity track-title"><?php echo esc_html($t['name']); ?></h3>
                     <p class="text-body-sm text-ink-muted leading-relaxed"><?php echo esc_html($t['desc']); ?></p>
                 </div>
@@ -68,7 +69,7 @@ get_template_part('template-parts/hero-inner');
             $important_dates = get_option('aic_important_dates', []);
             if (empty($important_dates)) {
                 $important_dates = [
-                    ['date_label' => 'Abstract Submission Deadline', 'date_value' => 'October 3, 2026', 'date_value_old' => 'September 19, 2026', 'date_desc' => ''],
+                    ['date_label' => 'Abstract Submission Deadline', 'date_value' => 'October 17, 2026', 'date_value_old' => "September 19, 2026\nOctober 3, 2026", 'date_desc' => ''],
                     ['date_label' => 'Abstract Acceptance Notification', 'date_value' => '2-3 Days After Submission', 'date_desc' => ''],
                     ['date_label' => 'Full Paper Submission', 'date_value' => 'October 31, 2026', 'date_desc' => ''],
                     ['date_label' => 'Conference Days', 'date_value' => 'November 4-5, 2026', 'date_desc' => ''],
@@ -84,14 +85,15 @@ get_template_part('template-parts/hero-inner');
                 </div>
                 <div class="space-y-0">
                     <?php foreach ($important_dates as $i => $d): ?>
-                    <div class="flex items-center justify-between py-4 <?php echo $i < count($important_dates) - 1 ? 'border-b border-surface-200' : ''; ?>">
-                        <div>
-                            <span class="text-body text-ink-muted"><?php echo esc_html($d['date_label']); ?><?php if (aic_deadline_extended($d)) aic_deadline_badge(); ?></span>
+                    <div class="cfp-date-row <?php echo aic_deadline_extended($d) ? 'cfp-date-row-extended' : ''; ?>">
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            <h3 class="text-body-sm font-semibold text-ink"><?php echo esc_html($d['date_label']); ?></h3>
+                            <?php if (aic_deadline_extended($d)) aic_deadline_badge(); ?>
+                        </div>
                             <?php if (!empty($d['date_desc'])): ?>
                                 <p class="text-body-sm text-ink-subtle mt-1"><?php echo esc_html($d['date_desc']); ?></p>
                             <?php endif; ?>
-                        </div>
-                        <span class="text-body-sm font-semibold text-ink shrink-0 ml-4 text-right"><?php aic_render_deadline_value($d); ?></span>
+                        <p class="cfp-date-value"><?php aic_render_deadline_value($d, 'cfp-date-old', 'cfp-date-current'); ?></p>
                     </div>
                     <?php endforeach; ?>
                 </div>

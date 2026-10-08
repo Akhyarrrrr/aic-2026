@@ -19,7 +19,7 @@ if (is_post_type_archive()) {
 
 $subtitle = get_the_archive_description() ?: '';
 ?>
-<?php get_template_part('template-parts/hero-inner'); ?>
+<?php get_template_part('template-parts/hero-inner', null, ['title' => $title, 'subtitle' => $subtitle]); ?>
 
 <section class="section bg-surface">
     <div class="container-custom">

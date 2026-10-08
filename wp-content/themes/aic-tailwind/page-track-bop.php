@@ -6,7 +6,7 @@
 get_header();
 
 $parent_id   = wp_get_post_parent_id(get_the_ID());
-$slug        = $parent_id ? get_post_field('post_name', $parent_id) : get_post_field('post_name');
+$slug        = aic_page_track_slug() ?: 'se';
 $track_config = [
     'se'  => ['color' => '#F79007', 'name' => 'Sciences & Engineering', 'code' => 'AIC-SE'],
     'els' => ['color' => '#137622', 'name' => 'Environmental & Life Sciences', 'code' => 'AIC-ELS'],
@@ -38,7 +38,7 @@ include get_template_directory() . '/template-parts/track-hero.php';
                     foreach ($stats as $st):
                     ?>
                     <div class="bg-white rounded-xl border border-surface-300/60 p-5 text-center">
-                        <span class="block text-2xl md:text-3xl font-bold leading-none mb-1" style="color: <?php echo esc_attr($track['color']); ?>;"><?php echo esc_html($st['val']); ?></span>
+                        <span class="block text-2xl md:text-3xl font-bold leading-none mb-1" style="color: <?php echo esc_attr(aic_track_ink($slug)); ?>;"><?php echo esc_html($st['val']); ?></span>
                         <span class="text-caption text-ink-subtle uppercase tracking-wider font-medium"><?php echo esc_html($st['label']); ?></span>
                     </div>
                     <?php endforeach; ?>
@@ -48,7 +48,7 @@ include get_template_directory() . '/template-parts/track-hero.php';
                 <div class="reveal">
                     <div class="flex items-center gap-3 mb-2">
                         <div class="w-1.5 h-6 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
-                        <p class="text-body-sm font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr($track['color']); ?>;">Conference Schedule</p>
+                        <p class="text-body-sm font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr(aic_track_ink($slug)); ?>;">Conference Schedule</p>
                     </div>
                     <h2 class="text-display text-ink mb-8"><?php echo esc_html($track['code']); ?> Program</h2>
 
@@ -57,7 +57,7 @@ include get_template_directory() . '/template-parts/track-hero.php';
                         <div class="bg-white rounded-2xl border border-surface-300/60 overflow-hidden reveal">
                             <div class="px-6 py-4 flex items-center gap-3" style="background: <?php echo esc_attr($track['color']); ?>08;">
                                 <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: <?php echo esc_attr($track['color']); ?>15;">
-                                    <span class="text-heading-sm font-bold" style="color: <?php echo esc_attr($track['color']); ?>;">1</span>
+                                    <span class="text-heading-sm font-bold" style="color: <?php echo esc_attr(aic_track_ink($slug)); ?>;">1</span>
                                 </div>
                                 <div>
                                     <h3 class="text-heading-sm text-ink font-semibold">Day 1 — November 4, 2026</h3>
@@ -71,7 +71,7 @@ include get_template_directory() . '/template-parts/track-hero.php';
                                     'keynote' => '#C7982C',
                                     'plenary' => $track['color'],
                                     'oral'    => $track['color'],
-                                    'poster'  => '#8B5CF6',
+                                    'poster'  => $track['color'],
                                     'break'   => '',
                                     'closing' => '#0D5F3A',
                                 ];
@@ -112,7 +112,7 @@ include get_template_directory() . '/template-parts/track-hero.php';
                         <div class="bg-white rounded-2xl border border-surface-300/60 overflow-hidden reveal">
                             <div class="px-6 py-4 flex items-center gap-3" style="background: <?php echo esc_attr($track['color']); ?>08;">
                                 <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: <?php echo esc_attr($track['color']); ?>15;">
-                                    <span class="text-heading-sm font-bold" style="color: <?php echo esc_attr($track['color']); ?>;">2</span>
+                                    <span class="text-heading-sm font-bold" style="color: <?php echo esc_attr(aic_track_ink($slug)); ?>;">2</span>
                                 </div>
                                 <div>
                                     <h3 class="text-heading-sm text-ink font-semibold">Day 2 — November 5, 2026</h3>
@@ -166,7 +166,7 @@ include get_template_directory() . '/template-parts/track-hero.php';
                         $program_url    = wp_get_attachment_url(get_option('aic_' . $program_field, 0)) ?: '';
                         ?>
                         <?php if ($abstract_url): ?>
-                        <a href="<?php echo esc_url($abstract_url); ?>" class="inline-flex items-center gap-2.5 px-5 py-3 rounded-xl text-white font-medium text-body-sm transition-all hover:opacity-90 active:scale-[0.98] no-underline" style="background: <?php echo esc_attr($track['color']); ?>;" download>
+                        <a href="<?php echo esc_url($abstract_url); ?>" class="inline-flex items-center gap-2.5 px-5 py-3 rounded-xl font-medium text-body-sm transition-all hover:opacity-90 active:scale-[0.98] no-underline" style="background: <?php echo esc_attr($track['color']); ?>; color: <?php echo esc_attr(aic_track_foreground($slug)); ?>;" download>
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
                             Abstract Template (.docx)
                         </a>

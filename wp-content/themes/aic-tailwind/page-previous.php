@@ -8,7 +8,7 @@ get_header();
 $title    = 'Previous AICs';
 $subtitle = 'Explore the legacy of AIC conferences.';
 ?>
-<?php get_template_part('template-parts/hero-inner'); ?>
+<?php get_template_part('template-parts/hero-inner', null, ['title' => $title, 'subtitle' => $subtitle]); ?>
 
 <section class="section bg-surface">
     <div class="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,7 +17,7 @@ $subtitle = 'Explore the legacy of AIC conferences.';
         <div class="mb-16 reveal">
             <div class="flex items-center gap-3 mb-4">
                 <span class="w-1.5 h-6 rounded-full bg-accent"></span>
-                <span class="text-accent text-body-sm font-semibold uppercase tracking-wider">AIC Through the Years</span>
+                <span class="text-accent-700 text-body-sm font-semibold uppercase tracking-wider">AIC Through the Years</span>
             </div>
             <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 mb-10">
                 <div class="lg:col-span-7">
@@ -26,16 +26,16 @@ $subtitle = 'Explore the legacy of AIC conferences.';
                 </div>
             </div>
             <div class="grid grid-cols-3 gap-4 sm:gap-6">
-                <div class="bg-white rounded-2xl border border-surface-300/60 p-6 lg:p-8 text-center">
-                    <span class="block text-display-sm lg:text-display font-bold text-primary leading-none mb-1">15</span>
+                <div class="bg-white rounded-2xl border border-surface-300/60 p-3 sm:p-6 lg:p-8 text-center">
+                    <span class="block text-xl sm:text-display-sm lg:text-display font-bold text-primary leading-none mb-1">15</span>
                     <span class="text-caption text-ink-muted">Editions</span>
                 </div>
-                <div class="bg-white rounded-2xl border border-surface-300/60 p-6 lg:p-8 text-center">
-                    <span class="block text-display-sm lg:text-display font-bold text-accent leading-none mb-1">2011</span>
+                <div class="bg-white rounded-2xl border border-surface-300/60 p-3 sm:p-6 lg:p-8 text-center">
+                    <span class="block text-xl sm:text-display-sm lg:text-display font-bold text-accent-700 leading-none mb-1">2011</span>
                     <span class="text-caption text-ink-muted">First Edition</span>
                 </div>
-                <div class="bg-white rounded-2xl border border-surface-300/60 p-6 lg:p-8 text-center">
-                    <span class="block text-display-sm lg:text-display font-bold text-primary leading-none mb-1">1K+</span>
+                <div class="bg-white rounded-2xl border border-surface-300/60 p-3 sm:p-6 lg:p-8 text-center">
+                    <span class="block text-xl sm:text-display-sm lg:text-display font-bold text-primary leading-none mb-1">1K+</span>
                     <span class="text-caption text-ink-muted">Presenters</span>
                 </div>
             </div>
@@ -82,35 +82,39 @@ $subtitle = 'Explore the legacy of AIC conferences.';
             foreach ($editions as $ed):
                 $available = empty($ed['na']);
             ?>
-            <a href="<?php echo esc_url($ed['url']); ?>" class="group relative bg-white rounded-2xl border overflow-hidden no-underline transition-all duration-500 <?php echo $available ? 'border-surface-300/60 hover:shadow-card-hover hover:-translate-y-1' : 'border-surface-200/60 opacity-50 cursor-not-allowed'; ?>">
+            <?php if ($available): ?>
+            <a href="<?php echo esc_url($ed['url']); ?>" class="group relative bg-white rounded-2xl border border-surface-300/60 overflow-hidden no-underline transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1">
+            <?php else: ?>
+            <article class="relative bg-surface-200 rounded-2xl border border-surface-300 overflow-hidden" aria-label="<?php echo esc_attr('AIC ' . $ed['year'] . ': website archive unavailable'); ?>">
+            <?php endif; ?>
                 <div class="relative">
                     <!-- Year backdrop -->
                     <div class="absolute top-0 right-0 text-[8rem] sm:text-[10rem] leading-none font-bold select-none pointer-events-none transition-all duration-500 <?php echo $available ? 'text-primary/[0.04] group-hover:text-primary/[0.07]' : 'text-surface-200'; ?>" style="line-height: 0.7;"><?php echo esc_html($ed['year']); ?></div>
                     <!-- Header bar -->
-                    <div class="relative z-10 flex items-center justify-between px-7 pt-6 lg:px-8 lg:pt-8">
-                        <span class="text-caption font-semibold uppercase tracking-wider <?php echo $available ? 'text-primary' : 'text-surface-400'; ?>"><?php echo esc_html($ed['label']); ?></span>
+                    <div class="relative z-10 flex flex-wrap items-center justify-between gap-3 mb-5 px-6 pt-6 lg:px-8 lg:pt-8">
+                        <span class="text-caption font-semibold uppercase tracking-wider <?php echo $available ? 'text-primary' : 'text-ink-muted'; ?>"><?php echo esc_html($ed['label']); ?></span>
                         <?php if ($available): ?>
                         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-caption font-semibold bg-primary/10 text-primary whitespace-nowrap">
                             <span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0"></span>
                             Available
                         </span>
                         <?php else: ?>
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-caption font-semibold bg-surface-200 text-surface-400 whitespace-nowrap">
-                            Pending
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-caption font-semibold bg-white text-ink-muted whitespace-nowrap">
+                            Unavailable
                         </span>
                         <?php endif; ?>
                     </div>
                     <!-- Content -->
                     <div class="relative z-10 px-7 pb-7 lg:px-8 lg:pb-8">
                         <div class="mb-5">
-                            <span class="block text-5xl sm:text-6xl font-bold tracking-tight leading-none <?php echo $available ? 'text-ink' : 'text-surface-400'; ?>">
+                            <span class="block text-5xl sm:text-6xl font-bold tracking-tight leading-none <?php echo $available ? 'text-ink' : 'text-ink-muted'; ?>">
                                 <?php echo esc_html($ed['year']); ?>
                             </span>
                         </div>
                         <?php if (!empty($ed['theme'])): ?>
                         <p class="text-body-sm text-ink-muted leading-relaxed">&ldquo;<?php echo esc_html($ed['theme']); ?>&rdquo;</p>
                         <?php else: ?>
-                        <p class="text-body-sm text-ink-subtle italic">Theme information coming soon</p>
+                        <p class="text-body-sm text-ink-muted">The website archive is currently unavailable.</p>
                         <?php endif; ?>
                         <!-- Action -->
                         <div class="mt-6 pt-5 border-t border-surface-200">
@@ -120,15 +124,15 @@ $subtitle = 'Explore the legacy of AIC conferences.';
                                 <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
                             </span>
                             <?php else: ?>
-                            <span class="inline-flex items-center gap-1.5 text-caption text-surface-400">
+                            <span class="inline-flex items-center gap-1.5 text-caption text-ink-muted">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                Coming soon
+                                Archive unavailable
                             </span>
                             <?php endif; ?>
                         </div>
                     </div>
                 </div>
-            </a>
+            <?php echo $available ? '</a>' : '</article>'; ?>
             <?php endforeach; ?>
         </div>
 
@@ -145,7 +149,7 @@ $subtitle = 'Explore the legacy of AIC conferences.';
                     <h2 class="text-display-sm lg:text-display text-white mb-4 text-balance">Publication AICs</h2>
                     <p class="text-surface-400 text-body-lg mb-10 max-w-2xl mx-auto">Browse published proceedings and papers from previous AIC conferences in our open-access archive.</p>
                     <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <a href="https://aic.usk.ac.id/publication-aics/" target="_blank" rel="noopener" class="inline-flex items-center gap-2.5 btn-accent btn-lg no-underline shadow-lg shadow-accent/20">
+                        <a href="<?php echo esc_url(home_url('/publication-aics/')); ?>" class="inline-flex items-center gap-2.5 btn-accent btn-lg no-underline shadow-lg shadow-accent/20">
                             View Publications
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                         </a>

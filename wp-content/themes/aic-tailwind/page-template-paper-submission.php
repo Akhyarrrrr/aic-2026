@@ -9,7 +9,7 @@ get_header();
 <?php
 $title    = 'Paper Submission & Publication';
 $subtitle = 'Guidelines for abstract and full paper submissions.';
-get_template_part('template-parts/hero-inner');
+get_template_part('template-parts/hero-inner', null, ['title' => $title, 'subtitle' => $subtitle]);
 ?>
 
 <section class="section bg-surface">

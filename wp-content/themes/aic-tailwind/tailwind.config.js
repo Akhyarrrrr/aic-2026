@@ -54,16 +54,16 @@ module.exports = {
         ink: {
           DEFAULT: '#1A1D1C',
           muted: '#5D615F',
-          subtle: '#8B8E8C',
+          subtle: '#626963',
         },
       },
       fontFamily: {
         sans: ['Poppins', 'system-ui', 'sans-serif'],
       },
       fontSize: {
-        'display-lg': ['3.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '700' }],
-        'display':    ['2.75rem', { lineHeight: '1.15', letterSpacing: '-0.015em', fontWeight: '700' }],
-        'display-sm': ['2.25rem', { lineHeight: '1.2', letterSpacing: '-0.01em', fontWeight: '700' }],
+        'display-lg': ['clamp(2rem, 1.4rem + 2.5vw, 3.5rem)', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '700' }],
+        'display':    ['clamp(2rem, 1.6rem + 1.6vw, 2.75rem)', { lineHeight: '1.15', letterSpacing: '-0.015em', fontWeight: '700' }],
+        'display-sm': ['clamp(1.875rem, 1.45rem + 1.5vw, 2.25rem)', { lineHeight: '1.2', letterSpacing: '-0.01em', fontWeight: '700' }],
         'heading-lg': ['1.75rem', { lineHeight: '1.3', fontWeight: '600' }],
         'heading':    ['1.375rem', { lineHeight: '1.35', fontWeight: '600' }],
         'heading-sm': ['1.125rem', { lineHeight: '1.4', fontWeight: '600' }],

@@ -5,8 +5,11 @@
  */
 class AIC_Nav_Walker extends Walker_Nav_Menu {
 
+    private $submenu_ids = [];
+
     function start_lvl(&$output, $depth = 0, $args = null) {
-        $output .= '<ul class="sub-menu absolute top-full left-0 mt-2 bg-white rounded-xl shadow-lg border border-surface-200 py-2 min-w-[220px] opacity-0 invisible group-hover:opacity-100 group-hover:visible scale-95 group-hover:scale-100 transition-all duration-200 z-50">';
+        $position = $depth === 0 ? 'top-full left-0' : 'top-0 left-full';
+        $output .= '<ul id="' . esc_attr($this->submenu_ids[$depth] ?? '') . '" class="sub-menu absolute ' . $position . ' bg-white rounded-xl shadow-lg border border-surface-200 py-2 min-w-[220px] opacity-0 invisible scale-95 transition-all duration-200 z-50">';
     }
 
     function end_lvl(&$output, $depth = 0, $args = null) {
@@ -20,12 +23,15 @@ class AIC_Nav_Walker extends Walker_Nav_Menu {
 
         // <li> wrapper
         $li_classes = ['relative'];
-        if ($has_kids)  $li_classes[] = 'group';
+        if ($has_kids) {
+            $li_classes[] = 'group';
+            $this->submenu_ids[$depth] = 'desktop-submenu-' . $item->ID;
+        }
         if ($depth > 0) $li_classes[] = 'px-1';
         $output .= '<li class="' . esc_attr(implode(' ', $li_classes)) . '">';
 
         // <a> link styles
-        $link_classes = 'block px-3 py-2 rounded-lg text-body-sm font-medium no-underline transition-all duration-200 whitespace-nowrap relative';
+        $link_classes = 'block px-3 py-3 rounded-lg text-body-sm font-medium no-underline transition-all duration-200 whitespace-nowrap relative';
 
         if ($depth > 0) {
             $link_classes .= ' text-ink-muted';
@@ -37,7 +43,7 @@ class AIC_Nav_Walker extends Walker_Nav_Menu {
             $link_classes .= ' hover:text-primary hover:bg-surface-100';
         }
 
-        $output .= '<a href="' . esc_url($item->url) . '" class="' . esc_attr($link_classes) . '">';
+        $output .= '<div class="flex items-center"><a href="' . esc_url($item->url) . '" class="' . esc_attr($link_classes) . '"' . ($is_active ? ' aria-current="page"' : '') . '>';
         $output .= '<span>' . esc_html($item->title) . '</span>';
 
         // Active underline indicator
@@ -45,11 +51,11 @@ class AIC_Nav_Walker extends Walker_Nav_Menu {
             $output .= '<span class="absolute bottom-0.5 left-3 right-3 h-0.5 bg-primary rounded-full"></span>';
         }
 
-        // Dropdown chevron
-        if ($has_kids && $depth === 0) {
-            $output .= '<svg class="inline w-3 h-3 ml-1 opacity-50 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>';
-        }
         $output .= '</a>';
+        if ($has_kids) {
+            $output .= '<button type="button" class="desktop-submenu-toggle" aria-label="' . esc_attr('Toggle ' . $item->title . ' submenu') . '" aria-expanded="false" aria-controls="' . esc_attr($this->submenu_ids[$depth]) . '"><svg class="w-3.5 h-3.5" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button>';
+        }
+        $output .= '</div>';
     }
 
     function end_el(&$output, $item, $depth = 0, $args = null) {

@@ -6,7 +6,7 @@
 get_header();
 
 $parent_id   = wp_get_post_parent_id(get_the_ID());
-$slug        = $parent_id ? get_post_field('post_name', $parent_id) : get_post_field('post_name');
+$slug        = aic_page_track_slug() ?: 'se';
 $track_config = [
     'se'  => ['color' => '#F79007', 'name' => 'Sciences & Engineering', 'code' => 'AIC-SE'],
     'els' => ['color' => '#137622', 'name' => 'Environmental & Life Sciences', 'code' => 'AIC-ELS'],
@@ -75,7 +75,7 @@ include get_template_directory() . '/template-parts/track-hero.php';
                         <div class="relative pl-5 mb-8">
                             <div class="absolute left-0 top-1 bottom-1 w-1 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
                             <h2 class="text-heading text-ink font-semibold"><?php echo esc_html($role); ?></h2>
-                            <p class="text-body-sm" style="color: <?php echo esc_attr($track['color']); ?>;"><?php echo esc_html($count); ?> member<?php echo $count > 1 ? 's' : ''; ?></p>
+                            <p class="text-body-sm" style="color: <?php echo esc_attr(aic_track_ink($slug)); ?>;"><?php echo esc_html($count); ?> member<?php echo $count > 1 ? 's' : ''; ?></p>
                         </div>
 
                         <?php if (str_contains($role, 'Organizing')): ?>
@@ -85,14 +85,14 @@ include get_template_directory() . '/template-parts/track-hero.php';
                         <div class="space-y-3">
                             <div class="group relative bg-white rounded-xl border border-surface-200 overflow-hidden transition-all duration-300 hover:shadow-card-hover hover:-translate-y-0.5">
                                 <div class="absolute left-0 top-0 bottom-0 w-0.5 opacity-0 group-hover:opacity-100 transition-all duration-300" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
-                                <div class="flex items-center justify-between px-6 py-5">
+                                <div class="flex flex-wrap items-start justify-between gap-3 px-5 py-5">
                                     <div class="min-w-0 flex-1">
-                                        <p class="text-body font-semibold text-ink truncate"><?php echo esc_html($chair['name']); ?></p>
+                                        <p class="text-body font-semibold text-ink committee-person"><?php echo esc_html($chair['name']); ?></p>
                                         <?php if ($chair['aff']): ?>
-                                        <p class="text-caption text-ink-subtle mt-0.5 truncate"><?php echo esc_html($chair['aff']); ?></p>
+                                        <p class="text-caption text-ink-subtle mt-0.5 committee-person-affiliation"><?php echo esc_html($chair['aff']); ?></p>
                                         <?php endif; ?>
                                     </div>
-                                    <span class="shrink-0 ml-4 px-3 py-1 rounded-full text-caption font-semibold" style="background: <?php echo esc_attr($track['color']); ?>12; color: <?php echo esc_attr($track['color']); ?>;"><?php echo esc_html($badge_map[$chair['sub_role']] ?? $chair['sub_role']); ?></span>
+                                    <span class="max-w-full px-3 py-1 rounded-lg text-caption font-semibold" style="background: <?php echo esc_attr($track['color']); ?>12; color: <?php echo esc_attr(aic_track_ink($slug)); ?>;"><?php echo esc_html($badge_map[$chair['sub_role']] ?? $chair['sub_role']); ?></span>
                                 </div>
                             </div>
                         </div>
@@ -102,14 +102,14 @@ include get_template_directory() . '/template-parts/track-hero.php';
                             <?php foreach ($others as $member): ?>
                             <div class="group relative bg-white rounded-xl border border-surface-200 transition-all duration-300 hover:shadow-card-hover hover:-translate-y-0.5 overflow-hidden">
                                 <div class="absolute left-0 top-0 bottom-0 w-0.5 opacity-0 group-hover:opacity-100 transition-all duration-300" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
-                                <div class="flex items-center justify-between px-5 py-4 min-w-0">
+                                <div class="flex flex-col items-start gap-3 px-5 py-4 min-w-0">
                                     <div class="min-w-0 flex-1">
-                                        <p class="text-body-sm font-semibold text-ink truncate"><?php echo esc_html($member['name']); ?></p>
+                                        <p class="text-body-sm font-semibold text-ink committee-person"><?php echo esc_html($member['name']); ?></p>
                                         <?php if ($member['aff']): ?>
-                                        <p class="text-caption text-ink-subtle mt-0.5 truncate"><?php echo esc_html($member['aff']); ?></p>
+                                        <p class="text-caption text-ink-subtle mt-0.5 committee-person-affiliation"><?php echo esc_html($member['aff']); ?></p>
                                         <?php endif; ?>
                                     </div>
-                                    <span class="shrink-0 ml-3 px-3 py-1 rounded-full text-caption font-semibold" style="background: <?php echo esc_attr($track['color']); ?>12; color: <?php echo esc_attr($track['color']); ?>;"><?php echo esc_html($badge_map[$member['sub_role']] ?? $member['sub_role']); ?></span>
+                                    <span class="max-w-full px-3 py-1 rounded-lg text-caption font-semibold" style="background: <?php echo esc_attr($track['color']); ?>12; color: <?php echo esc_attr(aic_track_ink($slug)); ?>;"><?php echo esc_html($badge_map[$member['sub_role']] ?? $member['sub_role']); ?></span>
                                 </div>
                             </div>
                             <?php endforeach; ?>
@@ -124,9 +124,9 @@ include get_template_directory() . '/template-parts/track-hero.php';
                                 <div class="absolute left-0 top-0 bottom-0 w-0.5 opacity-0 group-hover:opacity-100 transition-all duration-300" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
                                 <div class="flex items-center justify-between px-5 py-4 min-w-0">
                                     <div class="min-w-0 flex-1">
-                                        <p class="text-body-sm font-semibold text-ink truncate"><?php echo esc_html($member['name']); ?></p>
+                                        <p class="text-body-sm font-semibold text-ink committee-person"><?php echo esc_html($member['name']); ?></p>
                                         <?php if ($member['aff']): ?>
-                                        <p class="text-caption text-ink-subtle mt-0.5 truncate"><?php echo esc_html($member['aff']); ?></p>
+                                        <p class="text-caption text-ink-subtle mt-0.5 committee-person-affiliation"><?php echo esc_html($member['aff']); ?></p>
                                         <?php endif; ?>
                                 </div>
                             </div>
@@ -147,7 +147,7 @@ include get_template_directory() . '/template-parts/track-hero.php';
                         <div class="relative pl-5 mb-8">
                             <div class="absolute left-0 top-1 bottom-1 w-1 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
                             <h2 class="text-heading text-ink font-semibold"><?php echo esc_html($role); ?></h2>
-                            <p class="text-body-sm" style="color: <?php echo esc_attr($track['color']); ?>;"><?php echo esc_html($count); ?> member<?php echo $count > 1 ? 's' : ''; ?></p>
+                            <p class="text-body-sm" style="color: <?php echo esc_attr(aic_track_ink($slug)); ?>;"><?php echo esc_html($count); ?> member<?php echo $count > 1 ? 's' : ''; ?></p>
                         </div>
                         <div class="grid sm:grid-cols-2 gap-3">
                             <?php foreach ($members as $member): ?>
@@ -155,9 +155,9 @@ include get_template_directory() . '/template-parts/track-hero.php';
                                 <div class="absolute left-0 top-0 bottom-0 w-0.5 opacity-0 group-hover:opacity-100 transition-all duration-300" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
                                 <div class="flex items-center justify-between px-5 py-4 min-w-0">
                                     <div class="min-w-0 flex-1">
-                                        <p class="text-body-sm font-semibold text-ink truncate"><?php echo esc_html($member['name']); ?></p>
+                                        <p class="text-body-sm font-semibold text-ink committee-person"><?php echo esc_html($member['name']); ?></p>
                                         <?php if ($member['aff']): ?>
-                                        <p class="text-caption text-ink-subtle mt-0.5 truncate"><?php echo esc_html($member['aff']); ?></p>
+                                        <p class="text-caption text-ink-subtle mt-0.5 committee-person-affiliation"><?php echo esc_html($member['aff']); ?></p>
                                         <?php endif; ?>
                                     </div>
                                 </div>

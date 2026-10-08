@@ -46,17 +46,15 @@ $current_track = null;
 $slug = get_post_field('post_name', get_the_ID());
 
 // Check if current page is a track page or child of one
-foreach (['se', 'els', 'ss'] as $t) {
-    $tp = get_page_by_path($t);
-    if ($tp) {
-        if (get_the_ID() == $tp->ID) { $current_track = $t; break; }
-        $ancestors = get_post_ancestors(get_the_ID());
-        if (in_array($tp->ID, $ancestors ?? [])) { $current_track = $t; break; }
-    }
-}
+$current_track = aic_page_track_slug() ?: null;
 // Also check if viewing a speaker/committee single post
-if (!$current_track && is_singular(['speaker', 'committee'])) {
-    $current_track = get_field('speaker_track') ?: get_field('committee_track');
+if (!$current_track && is_singular('speaker')) {
+    $speaker = aic_get_speaker(get_queried_object_id());
+    $speaker_tracks = $speaker['tracks'] ?? [];
+    $current_track = count($speaker_tracks) === 1 && isset($track_colors[$speaker_tracks[0]]) ? $speaker_tracks[0] : null;
+} elseif (!$current_track && is_singular('committee')) {
+    $committee_track = get_field('committee_track');
+    $current_track = isset($track_colors[$committee_track]) ? $committee_track : null;
 }
 ?>
 
@@ -76,7 +74,7 @@ if (!$current_track && is_singular(['speaker', 'committee'])) {
                 <div class="flex-shrink-0 flex items-center gap-3">
                     <?php if (has_custom_logo()): ?>
                         <a href="<?php echo esc_url($current_track ? home_url("/{$current_track}/") : home_url('/')); ?>" class="custom-logo-link block no-underline" rel="home">
-                            <?php the_custom_logo(); ?>
+                            <?php echo wp_get_attachment_image(get_theme_mod('custom_logo'), 'full', false, ['class' => 'custom-logo', 'alt' => get_bloginfo('name')]); ?>
                         </a>
                     <?php else: ?>
                         <a href="<?php echo esc_url($current_track ? home_url("/{$current_track}/") : home_url('/')); ?>" id="logo-text" class="text-lg lg:text-xl font-bold text-white no-underline tracking-tight">
@@ -87,7 +85,7 @@ if (!$current_track && is_singular(['speaker', 'committee'])) {
 
                 <?php if ($current_track): ?>
                 <!-- ===== TRACK-SPECIFIC NAVIGATION ===== -->
-                <nav class="hidden lg:flex items-center gap-1" aria-label="Track navigation">
+                <nav class="hidden xl:flex items-center gap-1" aria-label="Track navigation">
                     <a href="<?php echo esc_url(home_url('/tracks/')); ?>" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-body-sm font-medium text-ink-muted hover:text-ink hover:bg-surface-100 transition-colors no-underline">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                         All Tracks
@@ -105,29 +103,29 @@ if (!$current_track && is_singular(['speaker', 'committee'])) {
                     foreach ($track_menu_items as $item):
                         $is_active = untrailingslashit($track_current_url) === untrailingslashit(wp_parse_url($item['url'], PHP_URL_PATH));
                     ?>
-                    <a href="<?php echo esc_url($item['url']); ?>" class="px-3 py-2 rounded-lg text-body-sm font-medium transition-colors no-underline <?php echo $is_active ? 'text-white' : 'text-ink-muted hover:text-ink hover:bg-surface-100'; ?>" <?php if ($is_active): ?>style="background: <?php echo esc_attr($track_colors[$current_track]); ?>"<?php endif; ?>>
+                    <a href="<?php echo esc_url($item['url']); ?>" class="px-3 py-3 rounded-lg text-body-sm font-medium transition-colors no-underline <?php echo $is_active ? '' : 'text-ink-muted hover:text-ink hover:bg-surface-100'; ?>" <?php if ($is_active): ?>aria-current="page" style="background: <?php echo esc_attr($track_colors[$current_track]); ?>; color: <?php echo esc_attr(aic_track_foreground($current_track)); ?>;"<?php endif; ?>>
                         <?php echo esc_html($item['label']); ?>
                     </a>
                     <?php endforeach; ?>
                 </nav>
 
                 <!-- Track CTA -->
-                <div class="hidden lg:flex items-center gap-3 ml-4">
-                    <a href="https://conference.usk.ac.id/<?php echo esc_attr(aic_track_code($current_track)); ?>/" target="_blank" rel="noopener" class="btn-sm no-underline rounded-lg font-medium text-white transition-all hover:opacity-90 active:scale-[0.98] px-4 py-2" style="background: <?php echo esc_attr($track_colors[$current_track]); ?>">
+                <div class="hidden xl:flex items-center gap-3 ml-4">
+                    <a href="https://conference.usk.ac.id/<?php echo esc_attr(aic_track_code($current_track)); ?>/" target="_blank" rel="noopener" class="btn-sm min-h-[44px] inline-flex items-center no-underline rounded-lg font-medium transition-all hover:opacity-90 active:scale-[0.98] px-4 py-2" style="background: <?php echo esc_attr($track_colors[$current_track]); ?>; color: <?php echo esc_attr(aic_track_foreground($current_track)); ?>;">
                         Submit Abstract
                         <svg class="w-3.5 h-3.5 inline-block ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
                     </a>
                 </div>
 
                 <!-- Mobile Toggle (Track) -->
-                <button id="mobile-toggle" class="lg:hidden p-2 -mr-2 transition-colors" aria-label="Toggle menu" aria-expanded="false">
+                <button id="mobile-toggle" class="xl:hidden p-2 -mr-2 transition-colors" aria-label="Toggle menu" aria-controls="mobile-menu" aria-expanded="false">
                     <svg id="menu-icon-open" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
                     <svg id="menu-icon-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 6L6 18M6 6l12 12"/></svg>
                 </button>
 
                 <?php else: ?>
                 <!-- ===== MAIN SITE NAVIGATION ===== -->
-                <nav class="hidden lg:flex items-center" aria-label="Main navigation">
+                <nav class="desktop-nav hidden xl:flex items-center" aria-label="Main navigation">
                     <?php
                     wp_nav_menu([
                         'theme_location' => 'primary',
@@ -140,12 +138,12 @@ if (!$current_track && is_singular(['speaker', 'committee'])) {
                 </nav>
 
                 <!-- Tracks CTA -->
-                <div class="hidden lg:flex items-center gap-3 ml-4">
+                <div class="hidden xl:flex items-center gap-3 ml-4">
                     <a href="<?php echo esc_url(home_url('/tracks/')); ?>" class="btn-accent btn-sm">Explore Tracks</a>
                 </div>
 
                 <!-- Mobile Toggle (Main) -->
-                <button id="mobile-toggle" class="lg:hidden p-2 -mr-2 transition-colors" aria-label="Toggle menu" aria-expanded="false">
+                <button id="mobile-toggle" class="xl:hidden p-2 -mr-2 transition-colors" aria-label="Toggle menu" aria-controls="mobile-menu" aria-expanded="false">
                     <svg id="menu-icon-open" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
                     <svg id="menu-icon-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 6L6 18M6 6l12 12"/></svg>
                 </button>
@@ -154,7 +152,7 @@ if (!$current_track && is_singular(['speaker', 'committee'])) {
         </div>
 
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="lg:hidden hidden bg-white/95 backdrop-blur-lg border-t border-surface-200 shadow-lg max-h-[80vh] overflow-y-auto">
+        <div id="mobile-menu" class="xl:hidden hidden bg-white border-t border-surface-200 shadow-lg overflow-y-auto" aria-label="Mobile navigation">
             <div class="container-custom py-4 space-y-1">
                 <?php if ($current_track): ?>
                 <!-- Track mobile menu -->
@@ -166,12 +164,12 @@ if (!$current_track && is_singular(['speaker', 'committee'])) {
                 <?php foreach ($track_menu_items as $item):
                     $is_active = untrailingslashit($track_current_url) === untrailingslashit(wp_parse_url($item['url'], PHP_URL_PATH));
                 ?>
-                <a href="<?php echo esc_url($item['url']); ?>" class="block px-3 py-3 rounded-xl text-body-sm font-medium transition-all no-underline <?php echo $is_active ? 'text-white' : 'text-ink-muted hover:bg-surface-100 hover:text-ink'; ?>" <?php if ($is_active): ?>style="background: <?php echo esc_attr($track_colors[$current_track]); ?>; box-shadow: 0 2px 8px <?php echo esc_attr($track_colors[$current_track]); ?>30;"<?php endif; ?>>
+                <a href="<?php echo esc_url($item['url']); ?>" class="block px-3 py-3 rounded-xl text-body-sm font-medium transition-all no-underline <?php echo $is_active ? '' : 'text-ink-muted hover:bg-surface-100 hover:text-ink'; ?>" <?php if ($is_active): ?>aria-current="page" style="background: <?php echo esc_attr($track_colors[$current_track]); ?>; color: <?php echo esc_attr(aic_track_foreground($current_track)); ?>;"<?php endif; ?>>
                     <?php echo esc_html($item['label']); ?>
                 </a>
                 <?php endforeach; ?>
                 <div class="h-px bg-surface-200 mx-3 mt-3"></div>
-                <a href="https://conference.usk.ac.id/<?php echo esc_attr(aic_track_code($current_track)); ?>/" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 w-full py-3.5 mt-2 rounded-xl text-white font-semibold text-body-sm transition-all hover:opacity-90 active:scale-[0.98] no-underline shadow-lg" style="background: <?php echo esc_attr($track_colors[$current_track]); ?>; box-shadow: 0 4px 14px <?php echo esc_attr($track_colors[$current_track]); ?>30;">
+                <a href="https://conference.usk.ac.id/<?php echo esc_attr(aic_track_code($current_track)); ?>/" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 w-full py-3.5 mt-2 rounded-xl font-semibold text-body-sm transition-all hover:opacity-90 active:scale-[0.98] no-underline" style="background: <?php echo esc_attr($track_colors[$current_track]); ?>; color: <?php echo esc_attr(aic_track_foreground($current_track)); ?>;">
                     Submit Abstract
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
                 </a>
@@ -229,11 +227,12 @@ if (!$current_track && is_singular(['speaker', 'committee'])) {
                     ?>
                     <?php if ($has_children): ?>
                     <div class="mobile-menu-group">
-                        <button type="button" class="mobile-submenu-toggle flex items-center justify-between w-full px-3 py-3 rounded-xl text-body-sm font-medium transition-all no-underline <?php echo $is_active ? 'bg-primary/10 text-primary font-semibold' : 'text-ink-muted hover:bg-surface-100 hover:text-ink'; ?>">
+                        <button type="button" aria-expanded="false" aria-controls="mobile-submenu-<?php echo (int) $item->ID; ?>" class="mobile-submenu-toggle flex items-center justify-between w-full px-3 py-3 rounded-xl text-body-sm font-medium transition-all no-underline <?php echo $is_active ? 'bg-primary/10 text-primary font-semibold' : 'text-ink-muted hover:bg-surface-100 hover:text-ink'; ?>">
                             <span><?php echo esc_html($item->title); ?></span>
                             <svg class="w-4 h-4 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </button>
-                        <div class="mobile-submenu hidden pl-4 mt-0.5 space-y-0.5">
+                        <div id="mobile-submenu-<?php echo (int) $item->ID; ?>" class="mobile-submenu hidden pl-4 mt-0.5 space-y-0.5">
+                            <a href="<?php echo esc_url($item->url); ?>" class="block px-3 py-3 rounded-lg text-body-sm font-semibold text-primary hover:bg-primary/5 no-underline"><?php echo esc_html($item->title); ?> overview</a>
                             <?php foreach ($item->children as $child):
                                 $child_active = $is_active_page($child->ID);
                             ?>

@@ -5,7 +5,7 @@
  */
 get_header();
 
-$slug = get_post_field('post_name');
+$slug = aic_page_track_slug() ?: 'se';
 $track_config = [
     'se'  => ['color' => '#F79007', 'name' => 'Sciences & Engineering', 'code' => 'AIC-SE'],
     'els' => ['color' => '#137622', 'name' => 'Environmental & Life Sciences', 'code' => 'AIC-ELS'],
@@ -50,7 +50,7 @@ include get_template_directory() . '/template-parts/track-hero.php';
 
                 <!-- About / WP Content -->
                 <?php if ($has_content): ?>
-                <div class="prose-custom bg-white rounded-2xl border border-surface-300/60 p-8 lg:p-12 reveal">
+                <div class="prose-custom bg-white rounded-2xl border border-surface-300/60 p-5 sm:p-8 lg:p-10 reveal">
                     <?php while (have_posts()): the_post(); echo wp_kses_post(aic_clean_colibri(get_the_content())); endwhile; ?>
                 </div>
                 <?php endif; ?>
@@ -62,7 +62,7 @@ include get_template_directory() . '/template-parts/track-hero.php';
                         <div class="w-1.5 h-6 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
                         <h2 class="text-heading-lg text-ink">Explore <?php echo esc_html($track['code']); ?></h2>
                     </div>
-                    <div class="grid sm:grid-cols-3 gap-5 reveal-stagger">
+                    <div class="download-grid reveal-stagger">
                         <?php foreach ($quick_links as $i => $ql):
                             $icons = [
                                 'speaker' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>',
@@ -74,14 +74,14 @@ include get_template_directory() . '/template-parts/track-hero.php';
                                 if (str_contains($ql['slug'], $k)) { $icon = $v; break; }
                             }
                         ?>
-                        <a href="<?php echo esc_url($ql['url']); ?>" class="group relative bg-white rounded-2xl border border-surface-300/60 p-6 no-underline hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300 overflow-hidden" style="--track-hover: <?php echo esc_attr($track['color']); ?>;">
+                        <a href="<?php echo esc_url($ql['url']); ?>" class="group relative bg-white rounded-2xl border border-surface-300/60 p-6 no-underline hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300" style="--track-hover: <?php echo esc_attr(aic_track_ink($slug)); ?>;">
                             <div class="absolute top-0 left-0 w-1 h-full transition-all duration-300 group-hover:w-1" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
                             <div class="card-icon-bg w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background: <?php echo esc_attr($track['color']); ?>10;">
                                 <svg class="card-svg w-6 h-6" style="color: <?php echo esc_attr($track['color']); ?>;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><?php echo $icon; ?></svg>
                             </div>
                             <h3 class="text-heading-sm text-ink font-semibold mb-1 transition-colors"><?php echo esc_html($ql['title']); ?></h3>
                             <p class="text-body-sm text-ink-muted"><?php echo esc_html($ql['title'] === 'Speaker' ? 'Meet our keynote and invited speakers' : ($ql['title'] === 'Committees' ? 'Our dedicated committee members' : 'Conference schedule and program')); ?></p>
-                            <span class="inline-flex items-center gap-1 text-caption font-medium mt-4 transition-colors" style="color: <?php echo esc_attr($track['color']); ?>;">
+                            <span class="inline-flex items-center gap-1 text-caption font-medium mt-4 transition-colors" style="color: <?php echo esc_attr(aic_track_ink($slug)); ?>;">
                                 Explore <?php echo esc_html($ql['title']); ?>
                                 <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
                             </span>

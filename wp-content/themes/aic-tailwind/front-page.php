@@ -19,9 +19,9 @@ $hero_bg    = content_url('uploads/2026/07/conference-hero.jpg');
     <div class="absolute inset-0 bg-gradient-to-b from-primary/80 via-primary/70 to-primary-900/90"></div>
     <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(circle, #C7982C 1px, transparent 1px); background-size: 36px 36px;"></div>
 
-    <div class="container-custom relative z-10 py-20 lg:py-0 text-center">
+    <div class="container-custom relative z-10 pt-28 pb-24 md:pt-36 md:pb-28 text-center">
         <div class="reveal mb-8">
-            <span class="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-white/10 text-caption sm:text-body-sm text-accent font-medium backdrop-blur-sm border border-white/10">
+            <span class="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-white/10 text-caption sm:text-body-sm text-accent-200 font-medium backdrop-blur-sm border border-white/10">
                 <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-accent shrink-0"></span>
                 <?php echo esc_html($conf_date); ?> &middot; <?php echo esc_html($conf_loc); ?>
             </span>
@@ -56,7 +56,7 @@ $hero_bg    = content_url('uploads/2026/07/conference-hero.jpg');
     </div>
 
     <!-- Scroll-down indicator -->
-    <a href="#about" class="absolute bottom-6 lg:bottom-8 left-1/2 -translate-x-1/2 text-white/50 hover:text-white transition-colors duration-300 animate-bounce no-underline">
+    <a href="#about" aria-label="About the conference" class="absolute bottom-6 lg:bottom-8 left-1/2 -translate-x-1/2 w-11 h-11 flex items-center justify-center text-white/80 hover:text-white transition-colors duration-300 no-underline">
         <svg class="w-6 h-6 lg:w-7 lg:h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
         </svg>
@@ -71,7 +71,7 @@ $hero_bg    = content_url('uploads/2026/07/conference-hero.jpg');
         <div class="grid lg:grid-cols-12 gap-12 lg:gap-20">
             <!-- Left | Title -->
             <div class="lg:col-span-5 reveal">
-                <p class="text-accent text-body-sm font-semibold uppercase tracking-wider mb-4">About the conference</p>
+                <p class="text-accent-700 text-body-sm font-semibold uppercase tracking-wider mb-4">About the conference</p>
                 <h2 class="text-display-sm lg:text-display text-ink mb-6 text-balance">
                     A premier<br> multidisciplinary<br class="hidden lg:block"> platform since 2011
                 </h2>
@@ -181,19 +181,19 @@ $chair_photo_url = $chair_photo_id ? wp_get_attachment_image_url($chair_photo_id
             ?>
             <a href="<?php echo esc_url($track_url); ?>"
                class="group relative block bg-white/50 rounded-2xl p-1.5 no-underline transition-all duration-500 hover:-translate-y-1 hover:shadow-card-hover"
-               style="--track-hover: <?php echo esc_attr($track['color']); ?>">
+               style="--track-hover: <?php echo esc_attr(aic_track_ink($track['slug'])); ?>">
                 <div class="relative bg-white rounded-[calc(1rem-0.375rem)] p-8 lg:p-10 border border-surface-200/80 transition-all duration-500 group-hover:border-transparent"
                      style="box-shadow: inset 0 1px 1px rgba(255,255,255,0.15);">
                     <!-- Color accent dot + label -->
                     <div class="flex items-center gap-2.5 mb-5">
                         <span class="w-2.5 h-2.5 rounded-full transition-all duration-500 group-hover:scale-125" style="background: <?php echo esc_attr($track['color']); ?>"></span>
-                        <span class="text-caption font-semibold uppercase tracking-widest" style="color: <?php echo esc_attr($track['color']); ?>"><?php echo esc_html($track['subtitle']); ?></span>
+                        <span class="text-caption font-semibold uppercase tracking-widest" style="color: <?php echo esc_attr(aic_track_ink($track['slug'])); ?>"><?php echo esc_html($track['subtitle']); ?></span>
                     </div>
 
                     <h3 class="text-heading text-ink mb-3 leading-tight"><?php echo esc_html($track['title']); ?></h3>
                     <p class="text-body-sm text-ink-muted leading-relaxed mb-8"><?php echo esc_html($track['desc']); ?></p>
 
-                    <span class="inline-flex items-center gap-2 text-body-sm font-medium transition-all duration-300 group-hover:gap-3 no-underline" style="color: <?php echo esc_attr($track['color']); ?>">
+                    <span class="inline-flex items-center gap-2 text-body-sm font-medium transition-all duration-300 group-hover:gap-3 no-underline" style="color: <?php echo esc_attr(aic_track_ink($track['slug'])); ?>">
                         Explore track
                         <span class="w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300" style="background: <?php echo esc_attr($track['color']); ?>15;">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
@@ -207,46 +207,19 @@ $chair_photo_url = $chair_photo_id ? wp_get_attachment_image_url($chair_photo_id
 </section>
 
 <!-- ============================================
-     KEYNOTE SPEAKERS — auto-rotating carousel
+     SPEAKERS
      ============================================ -->
 <section class="section bg-white" id="speakers">
     <div class="container-custom">
 
         <?php
-        $all_query = new WP_Query([
-            'post_type'      => 'speaker',
-            'posts_per_page' => 50,
-            'orderby'        => 'meta_value_num',
-            'meta_key'       => 'speaker_order',
-            'order'          => 'ASC',
-        ]);
-        $has_speakers = $all_query->have_posts();
-
-        $track_labels = ['SE' => 'AIC-SE', 'ELS' => 'AIC-ELS', 'SS' => 'AIC-SS'];
-        $track_accent = ['SE' => '#F79007', 'ELS' => '#137622', 'SS' => '#AA39AF'];
-
+        $speakers = aic_get_speakers();
         $keynotes = [];
         $invited  = [];
-        if ($has_speakers):
-            foreach ($all_query->posts as $sp):
-                $is_keynote = get_field('speaker_is_keynote', $sp->ID);
-                $tk = strtoupper(get_field('speaker_track', $sp->ID));
-                $entry = [
-                    'name'        => $sp->post_title,
-                    'affiliation' => get_field('speaker_affiliation', $sp->ID) ?: '',
-                    'title'       => get_field('speaker_title', $sp->ID) ?: '',
-                    'track'       => $tk,
-                    'is_keynote'  => $is_keynote,
-                    'cpt_id'      => $sp->ID,
-                    'order'       => get_field('speaker_order', $sp->ID),
-                ];
-                if ($is_keynote) {
-                    $keynotes[] = $entry;
-                } else {
-                    $invited[] = $entry;
-                }
-            endforeach;
-        endif;
+        foreach ($speakers as $speaker) {
+            if ($speaker['is_keynote']) $keynotes[] = $speaker;
+            else $invited[] = $speaker;
+        }
         ?>
 
         <?php if (!empty($keynotes)): ?>
@@ -262,113 +235,26 @@ $chair_photo_url = $chair_photo_id ? wp_get_attachment_image_url($chair_photo_id
             </a>
         </div>
 
-        <!-- Keynote auto-rotating carousel -->
-        <div class="relative mb-20 reveal" id="keynote-carousel" data-interval="8000">
-            <div class="relative px-4 sm:px-8 lg:px-24">
-                <?php foreach ($keynotes as $idx => $kn):
-                    $tk = $kn['track'];
-                    $tc = $track_accent[$tk] ?? '#666';
-                    $lbl = $track_labels[$tk] ?? $tk;
-                ?>
-                <div class="keynote-slide <?php echo $idx > 0 ? 'hidden' : ''; ?>" data-index="<?php echo $idx; ?>">
-                    <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-                        <!-- Photo -->
-                        <div class="lg:col-span-5">
-                            <div class="aspect-[3/4] rounded-2xl overflow-hidden bg-surface-200 shadow-lg">
-                                <?php if (has_post_thumbnail($kn['cpt_id'])): ?>
-                                    <?php echo get_the_post_thumbnail($kn['cpt_id'], 'large', ['class' => 'w-full h-full object-cover', 'loading' => 'lazy']); ?>
-                                <?php else: ?>
-                                    <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-surface-100 to-surface-200">
-                                        <svg class="w-24 h-24 text-surface-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                        <!-- Info -->
-                        <div class="lg:col-span-7">
-                            <div class="flex items-center gap-3 mb-4">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-caption font-semibold bg-accent/10 text-accent">
-                                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                                    Keynote Speaker
-                                </span>
-                                <span class="px-2.5 py-0.5 rounded-full text-caption font-semibold" style="background: <?php echo esc_attr($tc); ?>15; color: <?php echo esc_attr($tc); ?>;"><?php echo esc_html($lbl); ?></span>
-                            </div>
-                            <h3 class="text-display-sm text-ink mb-2"><?php echo esc_html($kn['name']); ?></h3>
-                            <?php if ($kn['title']): ?>
-                                <p class="text-body-lg text-primary font-medium mb-1"><?php echo esc_html($kn['title']); ?></p>
-                            <?php endif; ?>
-                            <?php if ($kn['affiliation']): ?>
-                                <p class="text-body text-ink-muted"><?php echo esc_html($kn['affiliation']); ?></p>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            </div>
-
-            <!-- Prev / Next arrows (outside content area) -->
-            <?php if (count($keynotes) > 1): ?>
-            <button class="keynote-prev absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-full bg-white/90 backdrop-blur-sm shadow-lg text-ink-muted hover:bg-accent hover:text-white flex items-center justify-center transition-all duration-300" aria-label="Previous keynote">
-                <svg class="w-5 h-5 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-            </button>
-            <button class="keynote-next absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-full bg-white/90 backdrop-blur-sm shadow-lg text-ink-muted hover:bg-accent hover:text-white flex items-center justify-center transition-all duration-300" aria-label="Next keynote">
-                <svg class="w-5 h-5 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-            </button>
-            <?php endif; ?>
-
-            <!-- Carousel dots -->
-            <?php if (count($keynotes) > 1): ?>
-            <div class="flex justify-center gap-2.5 mt-8">
-                <?php foreach ($keynotes as $idx => $kn): ?>
-                <button class="keynote-dot w-2.5 h-2.5 rounded-full transition-all duration-300 <?php echo $idx === 0 ? 'bg-accent scale-125' : 'bg-surface-300 hover:bg-surface-400'; ?>" data-index="<?php echo $idx; ?>" aria-label="Keynote <?php echo $idx + 1; ?>"></button>
-                <?php endforeach; ?>
-            </div>
-            <?php endif; ?>
+        <div class="speaker-grid mb-14 md:mb-16 reveal">
+            <?php foreach ($keynotes as $speaker): ?>
+                <?php get_template_part('template-parts/speaker-card', null, ['speaker' => $speaker]); ?>
+            <?php endforeach; ?>
         </div>
         <?php endif; ?>
 
         <?php if (!empty($invited)): ?>
         <!-- Invited speakers header -->
-        <div class="flex items-center mb-8 reveal">
-            <span class="w-1 h-8 rounded-full bg-primary shrink-0 mr-4"></span>
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-8 pt-8 border-t border-surface-300 reveal">
             <div>
-                <p class="text-heading-sm text-ink font-semibold">Invited Speakers</p>
-                <p class="text-caption text-ink-subtle"><?php echo count($invited); ?> speakers across 3 tracks</p>
+                <h2 class="text-heading-lg text-ink font-semibold">Invited Speakers</h2>
+                <p class="text-body-sm text-ink-muted mt-1">Specialized perspectives from researchers and practitioners.</p>
             </div>
         </div>
 
         <!-- Invited speakers grid -->
-        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 reveal-stagger">
-            <?php foreach ($invited as $iv):
-                $tk = $iv['track'];
-                $tc = $track_accent[$tk] ?? '#666';
-                $lbl = $track_labels[$tk] ?? $tk;
-            ?>
-            <div class="bg-white rounded-2xl border border-surface-200 overflow-hidden group hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300">
-                <!-- Photo -->
-                <div class="aspect-[3/4] overflow-hidden bg-surface-200">
-                    <?php if (has_post_thumbnail($iv['cpt_id'])): ?>
-                        <?php echo get_the_post_thumbnail($iv['cpt_id'], 'medium_large', ['class' => 'w-full h-full object-cover', 'loading' => 'lazy']); ?>
-                    <?php else: ?>
-                        <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-surface-100 to-surface-200">
-                            <svg class="w-16 h-16 text-surface-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
-                        </div>
-                    <?php endif; ?>
-                </div>
-                <!-- Info -->
-                <div class="p-4">
-                    <div class="flex items-center gap-2 mb-1.5">
-                        <span class="px-2 py-0.5 rounded-full text-[0.6rem] font-semibold" style="background: <?php echo esc_attr($tc); ?>15; color: <?php echo esc_attr($tc); ?>;"><?php echo esc_html($lbl); ?></span>
-                    </div>
-                    <h3 class="text-body font-semibold text-ink leading-tight mb-0.5"><?php echo esc_html($iv['name']); ?></h3>
-                    <?php if ($iv['title']): ?>
-                        <p class="text-caption text-primary truncate"><?php echo esc_html($iv['title']); ?></p>
-                    <?php endif; ?>
-                    <?php if ($iv['affiliation']): ?>
-                        <p class="text-caption text-ink-subtle truncate"><?php echo esc_html($iv['affiliation']); ?></p>
-                    <?php endif; ?>
-                </div>
-            </div>
+        <div class="speaker-grid reveal">
+            <?php foreach ($invited as $speaker): ?>
+                <?php get_template_part('template-parts/speaker-card', null, ['speaker' => $speaker]); ?>
             <?php endforeach; ?>
         </div>
         <?php endif; ?>
@@ -382,7 +268,6 @@ $chair_photo_url = $chair_photo_id ? wp_get_attachment_image_url($chair_photo_id
             <p class="text-ink-muted max-w-sm mx-auto">The organizing committee is confirming speakers. Check back soon for updates.</p>
         </div>
         <?php endif; ?>
-        <?php wp_reset_postdata(); ?>
     </div>
 </section>
 
@@ -401,26 +286,22 @@ $chair_photo_url = $chair_photo_id ? wp_get_attachment_image_url($chair_photo_id
         </div>
 
         <div class="max-w-3xl mx-auto reveal">
-            <?php $total = count($important_dates); $idx = 0; ?>
-            <?php foreach ($important_dates as $d): $idx++; $is_last = $idx === $total; ?>
-            <div class="flex gap-6 <?php echo !$is_last ? 'pb-10' : ''; ?>">
-                <div class="flex flex-col items-center">
-                    <div class="w-3 h-3 rounded-full shrink-0 mt-1.5 bg-white/60"></div>
-                    <?php if (!$is_last): ?>
-                    <div class="w-px flex-1 bg-white/15 mt-2"></div>
+            <?php foreach ($important_dates as $i => $d): ?>
+            <div class="flex gap-4 sm:gap-6 <?php echo $i < count($important_dates) - 1 ? 'pb-8 sm:pb-10' : ''; ?>">
+                <div class="flex flex-col items-center shrink-0" aria-hidden="true">
+                    <div class="w-3 h-3 rounded-full mt-1.5 bg-white/60 shrink-0"></div>
+                    <?php if ($i < count($important_dates) - 1): ?>
+                        <div class="w-px flex-1 bg-white/20 mt-2"></div>
                     <?php endif; ?>
                 </div>
-                <div class="rounded-xl p-5 -mt-0.5 flex-1">
-                    <p class="text-accent text-caption sm:text-body-sm font-semibold uppercase tracking-wider mb-1 break-words">
-                    <?php if (aic_deadline_extended($d)): ?>
-                        <?php aic_render_deadline_value($d, 'block text-caption line-through text-white/45 mb-0.5', 'block text-caption sm:text-body-sm font-semibold uppercase tracking-wider text-accent'); ?>
-                    <?php else: ?>
-                        <?php echo esc_html($d['date_value']); ?>
-                    <?php endif; ?>
-                    </p>
-                    <h4 class="text-white text-heading-sm font-semibold mb-1"><?php echo esc_html($d['date_label']); ?><?php if (aic_deadline_extended($d)) aic_deadline_badge(); ?></h4>
+                <div class="flex-1 min-w-0 pl-2 sm:pl-5 pb-5">
+                    <p class="home-timeline-value mb-2"><?php aic_render_deadline_value($d, 'home-timeline-old', 'home-timeline-current'); ?></p>
+                    <div class="flex flex-wrap items-center gap-x-2 gap-y-2 mb-1">
+                        <h3 class="text-white text-heading-sm font-semibold"><?php echo esc_html($d['date_label']); ?></h3>
+                        <?php if (aic_deadline_extended($d)) aic_deadline_badge(); ?>
+                    </div>
                     <?php if (!empty($d['date_desc'])): ?>
-                    <p class="text-surface-400 text-body-sm"><?php echo esc_html($d['date_desc']); ?></p>
+                        <p class="text-surface-400 text-body-sm"><?php echo esc_html($d['date_desc']); ?></p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -489,7 +370,7 @@ $chair_photo_url = $chair_photo_id ? wp_get_attachment_image_url($chair_photo_id
                 $span = ($i === 0 || $i === 4) ? 'md:col-span-2 md:row-span-2' : '';
                 $aspect = ($i === 0 || $i === 4) ? 'aspect-[4/3] md:aspect-auto' : 'aspect-square';
             ?>
-            <div class="<?php echo $span; ?> <?php echo $aspect; ?> rounded-xl overflow-hidden bg-surface-200 group cursor-pointer relative">
+            <div class="<?php echo $span; ?> <?php echo $aspect; ?> rounded-xl overflow-hidden bg-surface-200 group relative">
                 <img src="<?php echo esc_url($img[0]); ?>"
                      alt="AIC Conference"
                      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -520,7 +401,7 @@ $chair_photo_url = $chair_photo_id ? wp_get_attachment_image_url($chair_photo_id
             <div class="absolute inset-0 opacity-[0.06]" style="background-image: radial-gradient(circle at 30% 70%, #C7982C 1px, transparent 1px), radial-gradient(circle at 70% 30%, #ffffff 1px, transparent 1px); background-size: 32px 32px, 48px 48px;"></div>
             <div class="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
             <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
-            <div class="relative z-10 px-6 py-16 sm:px-20 sm:py-24 md:px-20 md:py-24 text-center max-w-3xl mx-auto reveal">
+            <div class="relative z-10 px-6 py-12 sm:px-12 sm:py-20 text-center max-w-3xl mx-auto reveal">
                 <div class="w-12 h-12 mx-auto mb-6 rounded-2xl bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/10">
                     <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/></svg>
                 </div>

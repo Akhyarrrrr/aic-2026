@@ -45,7 +45,7 @@ $icon_map = [
 <?php
 $title    = $page_title;
 $subtitle = 'Information about registration, templates, submission, and publication for AIC 2026.';
-get_template_part('template-parts/hero-inner');
+get_template_part('template-parts/hero-inner', null, ['title' => $title, 'subtitle' => $subtitle]);
 ?>
 
 <!-- Child pages -->

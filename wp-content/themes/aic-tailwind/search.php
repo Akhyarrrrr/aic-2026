@@ -8,7 +8,7 @@ $search_query = get_search_query();
 $title    = 'Search Results';
 $subtitle = $search_query ? "Results for: {$search_query}" : '';
 ?>
-<?php get_template_part('template-parts/hero-inner'); ?>
+<?php get_template_part('template-parts/hero-inner', null, ['title' => $title, 'subtitle' => $subtitle]); ?>
 
 <section class="section bg-surface">
     <div class="container-custom">
@@ -36,7 +36,7 @@ $subtitle = $search_query ? "Results for: {$search_query}" : '';
                 <div class="flex items-center justify-between mt-12 reveal">
                     <div>
                         <?php if (get_previous_posts_link()): ?>
-                            <a href="<?php echo esc_url(get_previous_posts_link_url()); ?>" class="btn-ghost no-underline">
+                            <a href="<?php echo esc_url(get_previous_posts_page_link()); ?>" class="btn-ghost no-underline">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                                 Previous
                             </a>
@@ -44,7 +44,7 @@ $subtitle = $search_query ? "Results for: {$search_query}" : '';
                     </div>
                     <div>
                         <?php if (get_next_posts_link()): ?>
-                            <a href="<?php echo esc_url(get_next_posts_link_url()); ?>" class="btn-ghost no-underline">
+                            <a href="<?php echo esc_url(get_next_posts_page_link()); ?>" class="btn-ghost no-underline">
                                 Next
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                             </a>

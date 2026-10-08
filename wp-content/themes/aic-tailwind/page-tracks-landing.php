@@ -8,7 +8,7 @@ get_header();
 $title    = 'Conference Tracks';
 $subtitle = 'Three disciplines, one mission.';
 ?>
-<?php get_template_part('template-parts/hero-inner'); ?>
+<?php get_template_part('template-parts/hero-inner', null, ['title' => $title, 'subtitle' => $subtitle]); ?>
 
 <section class="section bg-surface">
     <div class="container-custom">
@@ -41,14 +41,14 @@ $subtitle = 'Three disciplines, one mission.';
                 $url   = home_url("/{$track['slug']}/");
             ?>
             <a href="<?php echo esc_url($url); ?>" class="group relative bg-white rounded-2xl overflow-hidden no-underline transition-all duration-300 hover:-translate-y-1 border border-surface-300/60"
-               style="--track-hover: <?php echo esc_attr($color); ?>;">
+               style="--track-hover: <?php echo esc_attr(aic_track_ink($track['slug'])); ?>;">
                 <div class="h-1 w-full" style="background: <?php echo esc_attr($color); ?>;"></div>
                 <div class="p-7">
                     <div class="mb-4" style="color: <?php echo esc_attr($color); ?>;"><?php echo $track['icon']; ?></div>
-                    <span class="inline-block px-3 py-1 rounded-full text-caption font-semibold uppercase tracking-wider mb-3" style="background: <?php echo esc_attr($color); ?>15; color: <?php echo esc_attr($color); ?>;"><?php echo esc_html($code); ?></span>
+                    <span class="inline-block px-3 py-1 rounded-full text-caption font-semibold uppercase tracking-wider mb-3" style="background: <?php echo esc_attr($color); ?>15; color: <?php echo esc_attr(aic_track_ink($track['slug'])); ?>;"><?php echo esc_html($code); ?></span>
                     <h3 class="text-heading text-ink mb-3 group-hover:opacity-80 transition-opacity track-title"><?php echo esc_html($name); ?></h3>
                     <p class="text-body-sm text-ink-muted leading-relaxed mb-6"><?php echo esc_html($track['desc']); ?></p>
-                    <span class="inline-flex items-center gap-1.5 text-body-sm font-medium transition-colors no-underline" style="color: <?php echo esc_attr($color); ?>">
+                    <span class="inline-flex items-center gap-1.5 text-body-sm font-medium transition-colors no-underline" style="color: <?php echo esc_attr(aic_track_ink($track['slug'])); ?>">
                         Explore track
                         <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </span>

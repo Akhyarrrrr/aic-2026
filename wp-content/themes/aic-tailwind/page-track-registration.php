@@ -6,7 +6,7 @@
 get_header();
 
 $parent_id = wp_get_post_parent_id(get_the_ID());
-$slug      = $parent_id ? get_post_field('post_name', $parent_id) : get_post_field('post_name');
+$slug      = aic_page_track_slug() ?: 'se';
 
 $track_config = [
     'se'  => ['color' => '#F79007', 'name' => 'Sciences &amp; Engineering', 'code' => 'AIC-SE'],
@@ -45,7 +45,7 @@ $fee_nonpresenter_intl  = get_option('aic_fee_nonpresenter_intl', 'USD 35');
                 <div class="reveal">
                     <div class="flex items-center gap-3 mb-2">
                         <div class="w-1.5 h-6 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
-                        <p class="text-body-sm font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr($track['color']); ?>;">Step by Step</p>
+                        <p class="text-body-sm font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr(aic_track_ink($slug)); ?>;">Step by Step</p>
                     </div>
                     <h2 class="text-display text-ink mb-8">Registration Procedure</h2>
 
@@ -80,7 +80,7 @@ $fee_nonpresenter_intl  = get_option('aic_fee_nonpresenter_intl', 'USD 35');
                 <div class="reveal">
                     <div class="flex items-center gap-3 mb-2">
                         <div class="w-1.5 h-6 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
-                        <p class="text-body-sm font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr($track['color']); ?>;">Fees</p>
+                        <p class="text-body-sm font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr(aic_track_ink($slug)); ?>;">Fees</p>
                     </div>
                     <h2 class="text-display text-ink mb-8">Registration Fees</h2>
 
@@ -127,7 +127,7 @@ $fee_nonpresenter_intl  = get_option('aic_fee_nonpresenter_intl', 'USD 35');
                 <div class="reveal">
                     <div class="flex items-center gap-3 mb-2">
                         <div class="w-1.5 h-6 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
-                        <p class="text-body-sm font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr($track['color']); ?>;">Please Note</p>
+                        <p class="text-body-sm font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr(aic_track_ink($slug)); ?>;">Please Note</p>
                     </div>
                     <h2 class="text-display text-ink mb-8">Important Notes</h2>
 
@@ -162,7 +162,7 @@ $fee_nonpresenter_intl  = get_option('aic_fee_nonpresenter_intl', 'USD 35');
                 <div class="reveal">
                     <div class="flex items-center gap-3 mb-2">
                         <div class="w-1.5 h-6 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
-                        <p class="text-body-sm font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr($track['color']); ?>;">Guidelines</p>
+                        <p class="text-body-sm font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr(aic_track_ink($slug)); ?>;">Guidelines</p>
                     </div>
                     <h2 class="text-display text-ink mb-8">Abstract &amp; Full Paper Submission</h2>
 
@@ -173,7 +173,7 @@ $fee_nonpresenter_intl  = get_option('aic_fee_nonpresenter_intl', 'USD 35');
                                 'num' => '1',
                                 'title' => 'Submit Electronically',
                                 'desc' => $submit_url
-                                    ? 'Authors are invited to submit their manuscripts electronically through the <a href="' . esc_url($submit_url) . '" target="_blank" rel="noopener" class="font-medium underline" style="color: ' . esc_attr($track['color']) . ';">conference submission system</a>.'
+                                    ? 'Authors are invited to submit their manuscripts electronically through the <a href="' . esc_url($submit_url) . '" target="_blank" rel="noopener" class="font-medium underline" style="color: ' . esc_attr(aic_track_ink($slug)) . ';">conference submission system</a>.'
                                     : 'Authors are invited to submit their manuscripts electronically through the conference submission system (OCS).',
                             ],
                             [
@@ -219,7 +219,7 @@ $fee_nonpresenter_intl  = get_option('aic_fee_nonpresenter_intl', 'USD 35');
                 <div class="reveal">
                     <div class="flex items-center gap-3 mb-2">
                         <div class="w-1.5 h-6 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>;"></div>
-                        <p class="text-body-sm font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr($track['color']); ?>;">Where We Publish</p>
+                        <p class="text-body-sm font-semibold uppercase tracking-wider" style="color: <?php echo esc_attr(aic_track_ink($slug)); ?>;">Where We Publish</p>
                     </div>
                     <h2 class="text-display text-ink mb-8">Publication</h2>
 
@@ -270,7 +270,7 @@ $fee_nonpresenter_intl  = get_option('aic_fee_nonpresenter_intl', 'USD 35');
                                 <div class="grid sm:grid-cols-3 gap-3">
                                     <?php
                                     $se_journals = [
-                                        ['name' => 'JEEEMI', 'tier' => 'Scopus Q3', 'full' => 'Journal of Electronics, Electromedical Engineering, and Medical Informatics'],
+                                        ['name' => 'JEEEMI', 'tier' => 'Scopus Q1', 'full' => 'Journal of Electronics, Electromedical Engineering, and Medical Informatics'],
                                         ['name' => 'INFOTEL', 'tier' => 'SINTA 1', 'full' => ''],
                                         ['name' => 'IJEEEMI', 'tier' => 'SINTA 2', 'full' => ''],
                                     ];
@@ -278,7 +278,7 @@ $fee_nonpresenter_intl  = get_option('aic_fee_nonpresenter_intl', 'USD 35');
                                     ?>
                                     <div class="rounded-xl p-4 text-center border border-surface-200" style="background: <?php echo esc_attr($track['color']); ?>05;">
                                         <p class="text-body-sm font-bold text-ink mb-0.5"><?php echo esc_html($j['name']); ?></p>
-                                        <span class="text-caption font-semibold px-2 py-0.5 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>15; color: <?php echo esc_attr($track['color']); ?>;"><?php echo esc_html($j['tier']); ?></span>
+                                        <span class="text-caption font-semibold px-2 py-0.5 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>15; color: <?php echo esc_attr(aic_track_ink($slug)); ?>;"><?php echo esc_html($j['tier']); ?></span>
                                         <?php if ($j['full']): ?>
                                         <p class="text-caption text-ink-subtle mt-1.5 leading-snug"><?php echo esc_html($j['full']); ?></p>
                                         <?php endif; ?>
@@ -302,7 +302,7 @@ $fee_nonpresenter_intl  = get_option('aic_fee_nonpresenter_intl', 'USD 35');
                             <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                                 <?php
                                 $ss_journals = [
-                                    ['name' => 'SIELE', 'tier' => 'Scopus Q3'],
+                                    ['name' => 'SIELE', 'tier' => 'Scopus Q1'],
                                     ['name' => 'Jaroe', 'tier' => 'SINTA 2'],
                                     ['name' => 'JABD', 'tier' => 'SINTA 2', 'full' => 'Journal of Accounting and Business Dynamics'],
                                     ['name' => 'JIS', 'tier' => 'SINTA 2', 'full' => 'Jurnal Ilmu Sosial'],
@@ -312,7 +312,7 @@ $fee_nonpresenter_intl  = get_option('aic_fee_nonpresenter_intl', 'USD 35');
                                 ?>
                                 <div class="rounded-xl p-4 text-center border border-surface-200" style="background: <?php echo esc_attr($track['color']); ?>05;">
                                     <p class="text-body-sm font-bold text-ink mb-0.5"><?php echo esc_html($j['name']); ?></p>
-                                    <span class="text-caption font-semibold px-2 py-0.5 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>15; color: <?php echo esc_attr($track['color']); ?>;"><?php echo esc_html($j['tier']); ?></span>
+                                    <span class="text-caption font-semibold px-2 py-0.5 rounded-full" style="background: <?php echo esc_attr($track['color']); ?>15; color: <?php echo esc_attr(aic_track_ink($slug)); ?>;"><?php echo esc_html($j['tier']); ?></span>
                                     <?php if (!empty($j['full'])): ?>
                                     <p class="text-caption text-ink-subtle mt-1.5 leading-snug"><?php echo esc_html($j['full']); ?></p>
                                     <?php endif; ?>

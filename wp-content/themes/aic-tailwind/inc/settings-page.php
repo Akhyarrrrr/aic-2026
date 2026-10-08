@@ -86,7 +86,7 @@ function aic_settings_page() {
                     $dates[] = [
                         'date_label'     => sanitize_text_field($label),
                         'date_value'     => sanitize_text_field($data['dates']['value'][$i] ?? ''),
-                        'date_value_old' => sanitize_text_field($data['dates']['old'][$i] ?? ''),
+                        'date_value_old' => sanitize_textarea_field(wp_unslash($data['dates']['old'][$i] ?? '')),
                         'date_desc'      => sanitize_text_field($data['dates']['desc'][$i] ?? ''),
                     ];
                 }
@@ -372,19 +372,20 @@ function aic_field_repeater_dates() {
         <th scope="row">Important Dates</th>
         <td>
             <table class="wp-list-table widefat striped" id="aic-dates-table">
-                <thead><tr><th>Event</th><th>Date</th><th>Old Date (struck)&nbsp;</th><th>Description</th><th></th></tr></thead>
+                <thead><tr><th>Event</th><th>Current Date</th><th>Previous Dates (struck)</th><th>Description</th><th></th></tr></thead>
                 <tbody>
                     <?php foreach ($dates as $i => $d): ?>
                     <tr>
                         <td><input type="text" name="aic[dates][label][]" value="<?php echo esc_attr($d['date_label'] ?? ''); ?>" class="regular-text"></td>
                         <td><input type="text" name="aic[dates][value][]" value="<?php echo esc_attr($d['date_value'] ?? ''); ?>" class="regular-text"></td>
-                        <td><input type="text" name="aic[dates][old][]" value="<?php echo esc_attr($d['date_value_old'] ?? ''); ?>" class="regular-text" style="width:100%"></td>
+                        <td><textarea name="aic[dates][old][]" rows="2" class="regular-text" style="width:100%" aria-label="Previous deadlines, one date per line"><?php echo esc_textarea($d['date_value_old'] ?? ''); ?></textarea></td>
                         <td><input type="text" name="aic[dates][desc][]" value="<?php echo esc_attr($d['date_desc'] ?? ''); ?>" style="width:100%"></td>
                         <td><button type="button" class="button aic-row-remove">&times;</button></td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
+            <p class="description">Enter the latest deadline in Current Date. Add previous deadlines one per line; each will be struck through on the website.</p>
             <p><button type="button" class="button" id="aic-dates-add">Add Row</button></p>
         </td>
     </tr>
@@ -547,7 +548,7 @@ add_action('admin_footer', function () {
 
         // Dates repeater
         $('#aic-dates-add').on('click', function(){
-            var tpl = '<tr><td><input type="text" name="aic[dates][label][]" class="regular-text"></td><td><input type="text" name="aic[dates][value][]" class="regular-text"></td><td><input type="text" name="aic[dates][old][]" class="regular-text" style="width:100%"></td><td><input type="text" name="aic[dates][desc][]" style="width:100%"></td><td><button type="button" class="button aic-row-remove">&times;</button></td></tr>';
+            var tpl = '<tr><td><input type="text" name="aic[dates][label][]" class="regular-text"></td><td><input type="text" name="aic[dates][value][]" class="regular-text"></td><td><textarea name="aic[dates][old][]" rows="2" class="regular-text" style="width:100%" aria-label="Previous deadlines, one date per line"></textarea></td><td><input type="text" name="aic[dates][desc][]" style="width:100%"></td><td><button type="button" class="button aic-row-remove">&times;</button></td></tr>';
             $('#aic-dates-table tbody').append(tpl);
         });
 

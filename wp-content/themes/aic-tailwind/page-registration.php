@@ -9,7 +9,7 @@ get_header();
 <?php
 $title    = 'Registration Fee';
 $subtitle = 'Complete your registration for the 16th AIC 2026.';
-get_template_part('template-parts/hero-inner');
+get_template_part('template-parts/hero-inner', null, ['title' => $title, 'subtitle' => $subtitle]);
 ?>
 
 <!-- Fee Content -->
@@ -90,10 +90,15 @@ get_template_part('template-parts/hero-inner');
                     </h3>
                     <div class="ml-8 text-body-sm text-ink-muted">
                         <p>Please fill in this form to register:</p>
-                        <a href="<?php echo esc_url( get_option('aic_reg_form_url', '#') ); ?>" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-primary font-medium mt-2 no-underline hover:underline">
+                        <?php $registration_url = get_option('aic_reg_form_url', ''); ?>
+                        <?php if ($registration_url && $registration_url !== '#'): ?>
+                        <a href="<?php echo esc_url($registration_url); ?>" target="_blank" rel="noopener" class="inline-flex min-h-[44px] items-center gap-1.5 text-primary font-medium mt-2 no-underline hover:underline">
                             Registration Form
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
                         </a>
+                        <?php else: ?>
+                        <p class="text-body-sm">The registration form is not yet available. <a href="mailto:aic@usk.ac.id">Contact the organizing committee</a> for registration information.</p>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -124,7 +129,7 @@ get_template_part('template-parts/hero-inner');
                 'ss'  => ['name' => 'Social Sciences', 'code' => 'AIC-SS', 'color' => '#AA39AF', 'desc' => 'Scopus-indexed journal SIELE and SINTA 2 partner journals.'],
             ];
             ?>
-            <div class="grid sm:grid-cols-3 gap-5">
+            <div class="download-grid">
                 <?php foreach ($tracks as $slug => $t): ?>
                 <a href="<?php echo esc_url(home_url("/{$slug}/registration-publication-fee/")); ?>"
                    class="group block bg-white rounded-2xl border border-surface-200 p-6 no-underline hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300">
@@ -132,11 +137,11 @@ get_template_part('template-parts/hero-inner');
                         <span class="w-3 h-3 rounded-full shrink-0" style="background: <?php echo esc_attr($t['color']); ?>;"></span>
                         <div>
                             <p class="text-body-sm font-semibold text-ink group-hover:text-primary transition-colors"><?php echo $t['name']; ?></p>
-                            <p class="text-caption font-semibold" style="color: <?php echo esc_attr($t['color']); ?>;"><?php echo $t['code']; ?></p>
+                            <p class="text-caption font-semibold" style="color: <?php echo esc_attr(aic_track_ink($slug)); ?>;"><?php echo $t['code']; ?></p>
                         </div>
                     </div>
                     <p class="text-body-sm text-ink-muted leading-relaxed mb-4"><?php echo $t['desc']; ?></p>
-                    <span class="inline-flex items-center gap-1.5 text-body-sm font-medium no-underline" style="color: <?php echo esc_attr($t['color']); ?>;">
+                    <span class="inline-flex items-center gap-1.5 text-body-sm font-medium no-underline" style="color: <?php echo esc_attr(aic_track_ink($slug)); ?>;">
                         View Registration Details
                         <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                     </span>
