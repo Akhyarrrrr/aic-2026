@@ -270,7 +270,7 @@ $fee_nonpresenter_intl  = get_option('aic_fee_nonpresenter_intl', 'USD 35');
                                 <div class="grid sm:grid-cols-3 gap-3">
                                     <?php
                                     $se_journals = [
-                                        ['name' => 'JEEEMI', 'tier' => 'Scopus Q1', 'full' => 'Journal of Electronics, Electromedical Engineering, and Medical Informatics'],
+                                        ['name' => 'JEEEMI', 'tier' => 'Scopus Q3', 'full' => 'Journal of Electronics, Electromedical Engineering, and Medical Informatics'],
                                         ['name' => 'INFOTEL', 'tier' => 'SINTA 1', 'full' => ''],
                                         ['name' => 'IJEEEMI', 'tier' => 'SINTA 2', 'full' => ''],
                                     ];
